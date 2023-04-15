@@ -59,10 +59,12 @@ def index():
 
     # execute the user script to collect IO elements
     # if an unencountered input is found, the script terminates early and the user is prompted to provide input
-    Exec(Cache.get('script'))
+    Exec(Cache.get("script"))
 
     # render collected IO into a form - inputs with submitted values are disabled
-    return render_template("index.html", title=Cache.get('title'), icon=Cache.get('icon'), io=session["io"])
+    return render_template(
+        "index.html", title=Cache.get("title"), icon=Cache.get("icon"), io=session["io"]
+    )
 
 
 if __name__ == "__main__":

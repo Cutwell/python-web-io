@@ -35,7 +35,7 @@ if __name__ == "__main__":
         "--title",
         type=str,
         help="Title for webapp (optional).",
-        default="Python Web IO",
+        default="Python Web I/O",
     )
     parser.add_argument(
         "--icon", type=str, help="Emoji webapp icon (optional).", default="🎯"

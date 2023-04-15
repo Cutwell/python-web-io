@@ -21,9 +21,12 @@ def input(prompt: str = "Input"):
 
     if session["counter"] <= len(
         session["io"]
-    ):  # if element has recorded input in session
-        output = session["io"][index][1][2]
-        return output
+    ):  # if element exists for this index
+        if len(session["io"][index][1]) == 3:   # if element has recorded input in session
+            output = session["io"][index][1][2]
+            return output
+        else:   # else still waiting on input
+            raise ExecInterrupt
 
     else:  # new element
         session["io"].append(("input", (index, prompt)))
