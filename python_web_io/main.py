@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Generate a web UI to iteract with a Python script."
     )
-    parser.add_argument("filepath", type=str, help="Script filepath (required).")
+    parser.add_argument("script", type=str, help="Script filepath (required).")
     parser.add_argument(
         "--debug",
         action="store_true",
@@ -41,4 +41,4 @@ if __name__ == "__main__":
         "--icon", type=str, help="Emoji webapp icon (optional).", default="🎯"
     )
     args = parser.parse_args()
-    main(filepath=args.filepath, title=args.title, icon=args.icon, debug=args.debug)
+    main(filepath=args.script, title=args.title, icon=args.icon, debug=args.debug)
