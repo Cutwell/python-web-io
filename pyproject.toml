@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "python-web-io"
+version = "0.1.0"
+description = ""
+authors = ["Zachary Smith"]
+packages = [{include = "python_web_io"}]
+
+[tool.poetry.scripts]
+python_web_io = "python_web_io.main:start"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^2.2.3"
+python-dotenv = "^1.0.0"
+flask-session = "^0.4.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+pre-commit = "^3.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
