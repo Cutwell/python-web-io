@@ -25,6 +25,7 @@ def internal_error(error):
     return render_template("500.html", title=Cache.get("title"), icon=Cache.get("icon"), error=error)
 
 
+@app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 def index():
     """
