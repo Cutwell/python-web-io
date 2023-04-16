@@ -1,18 +1,16 @@
 import os
 import builtins
 
-from dotenv import load_dotenv
 from flask import Flask, session, request, render_template
-from .override import (
+from python_web_io.override import (
     input,
     print,
     Exec,
 )  # input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
-from .cache import Cache
+from python_web_io.cache import Cache
 
 app = Flask(__name__)
 
-load_dotenv()
 FLASK_SECRET_KEY = os.environ["FLASK_SECRET_KEY"]
 app.secret_key = bytes(FLASK_SECRET_KEY, "utf-8")
 

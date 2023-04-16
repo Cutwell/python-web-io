@@ -1,5 +1,7 @@
-import python_web_io
 import argparse
+
+from python_web_io.cache import Cache
+from python_web_io.server import app
 
 
 def main(filepath: str, title: str, icon: str, debug: bool):
@@ -13,15 +15,15 @@ def main(filepath: str, title: str, icon: str, debug: bool):
         script = file.read()
 
     # save args to config / Cache
-    python_web_io.Cache.set("script", script)
-    python_web_io.Cache.set("title", title)
-    python_web_io.Cache.set("icon", icon)
+    Cache.set("script", script)
+    Cache.set("title", title)
+    Cache.set("icon", icon)
 
     # start the Flask server
-    python_web_io.app.run(debug=debug)
+    app.run(debug=debug)
 
 
-if __name__ == "__main__":
+def start():
     parser = argparse.ArgumentParser(
         description="Generate a web UI to iteract with a Python script."
     )
@@ -42,3 +44,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(filepath=args.script, title=args.title, icon=args.icon, debug=args.debug)
+
+
+if __name__ == "__main__":
+    start()

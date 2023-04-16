@@ -1,11 +1,19 @@
 # Python Web I/O
  Generate a webpage as a GUI for a Python script, and serve from anywhere.
 
+## Install
+```
+$ pip install python-web-io
+$ export FLASK_SECRET_KEY="someSecureSecretKey"
+$ python_web_io .\example.py
+```
+
 ## Getting started
 1. Fork this repository.
-2. Create a `.env` file in `/python_web_io` according to `/python_web_io/.env.example` (use any random if testing key).
+From inside `/python_web_io`:
+2. Create a `.envrc` file, setting `FLASK_SECRET_KEY` as per `python_web_io/.envrc.example`.
 3. Install poetry dependencies with `poetry install`.
-4. Try running the `example.py` script using `poetry run python .\python_web_io\main.py .\example.py`. (Note: on Windows you may need to intialise poetry as a virtual environment, then try `python .\python_web_io\main.py .\example.py` from a terminal with the virtual environment activated)
+4. Try running the `example.py` script using `poetry run python python_web_io example.py`.
 
 ## Config
 |Argument|||
