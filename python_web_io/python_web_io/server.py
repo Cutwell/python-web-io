@@ -1,7 +1,7 @@
 import os
 import builtins
 
-from flask import Flask, session, request, render_template
+from flask import Flask, session, request, render_template, url_for, redirect
 from python_web_io.override import (
     input,
     print,
@@ -22,10 +22,10 @@ def internal_error(error):
     A custom 500 error page should inform the user of this issue and direct them to clear cookies / close the tab to fix.
     """
 
-    return render_template("500.html", error=error)
+    return render_template("500.html", title=Cache.get("title"), icon=Cache.get("icon"), error=error)
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
 def index():
     """
     Run a Python script, generating a list of IO to display.
@@ -43,10 +43,10 @@ def index():
         for key, value in request.form.items():
             index = int(key)
 
-            # assert does not have value assigned (raise error if already assigned, as key error or client enabling disabled inputs)
-            assert len(session["io"][index][1]) == 2
-            # if passing, reassign io element with a value arg
-            session["io"][index] = ("input", (*session["io"][index][1], value))
+            # detect form resubmission by checking if form has inputs that are already assigned
+            if len(session["io"][index][1]) < 3:
+                # if passing, reassign io element with a value arg
+                session["io"][index] = ("input", (*session["io"][index][1], value))
 
     # track input/print elements encountered over multiple re-runs of the script
     if "io" not in session:
@@ -57,12 +57,40 @@ def index():
 
     # execute the user script to collect IO elements
     # if an unencountered input is found, the script terminates early and the user is prompted to provide input
-    Exec(Cache.get("script"))
+    error = Exec(Cache.get("script"))
+
+    # if error raised, then previous input is likely invalid
+    # find last input and delete user input (and delete any elements past this point)
+    if error:
+        # find index of most recent input
+        for i in range(1, len(session["io"])+1):
+            func_name = session["io"][-i][0]
+            if func_name == 'input':
+                # delete input_value by recreating func tuple
+                input_id, input_label, _ = session["io"][-i][1]
+                session["io"][-i] = (func_name, (input_id, input_label))
+                
+                # delete all elements past this point
+                session["io"] = session["io"][:len(session["io"])-i+1]
+
+                break
 
     # render collected IO into a form - inputs with submitted values are disabled
     return render_template(
-        "index.html", title=Cache.get("title"), icon=Cache.get("icon"), io=session["io"]
+        "index.html", title=Cache.get("title"), icon=Cache.get("icon"), io=session["io"], error=error,
     )
+
+
+@app.route("/reset", methods=["POST"])
+def reset():
+    """
+    Reset the user session.
+    """
+    # clear the user session
+    session["io"] = []
+
+    # render collected IO into a form - inputs with submitted values are disabled
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":

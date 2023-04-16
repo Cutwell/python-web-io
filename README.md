@@ -1,7 +1,7 @@
 # Python Web I/O
  Generate a webpage as a GUI for a Python script, and serve from anywhere.
 
-![PyPI](https://img.shields.io/pypi/v/python-web-io?style=flat-square)
+[![PyPI](https://img.shields.io/pypi/v/python-web-io?style=flat-square)](https://pypi.org/project/python-web-io/)
 
 ## Install
 ```

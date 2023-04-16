@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>500 Internal Server Error</h1>
-    <p>{{error}}</p>
-    <hr>
-    <ul>
-        <li>The server has unfortunately forgotten your form progress.</li>
-    </ul>
-    <ol>
-        <li>Check this website is only open in one tab.</li>
-        <li>Clear cookies and site data.</li>
-        <li>This webapp uses temporary cookies. Reloading the tab / restarting the browser / computer should clear them.</li>
-    </ol>
+<h1>500 Internal Server Error</h1>
+<p>{{error}}</p>
+<hr>
+<p>The server has unfortunately forgotten your form progress. Try these steps to fix the issue.</p>
+<ol>
+    <li>Reload the website.</li>
+    <li>Check this website is only open in one tab.</li>
+    <li>Clear cookies and site data.</li>
+    <li>This webapp uses temporary cookies. Restarting the browser / computer should clear them.</li>
+</ol>
 {% endblock %}

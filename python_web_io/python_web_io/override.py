@@ -65,3 +65,5 @@ def Exec(source, globals=None, locals=None):
         exec(source, globals, locals)
     except ExecInterrupt:
         pass
+    except Exception as e:
+        return e
