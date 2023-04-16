@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-web-io"
-version = "0.1.9"
+version = "0.1.10"
 description = "Generate a webpage as a GUI for a Python script, and serve from anywhere."
 authors = ["Zachary Smith"]
 packages = [{include = "python_web_io"}]
