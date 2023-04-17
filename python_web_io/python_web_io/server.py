@@ -39,15 +39,29 @@ def index():
 
     # POST request indicates user is submitting input
     if request.method == "POST":
-        # iterate the form inputs/submission
-        # we don't support re-editing previous submissions yet (past inputs are disabled), but this approach could allow this to change in the future
-        for key, value in request.form.items():
-            index = int(key)
+        if len(request.form) > 0:
+            # if form has data
+            # iterate the form inputs/submission
+            # we don't support re-editing previous submissions yet (past inputs are disabled), but this approach could allow this to change in the future
+            for key, value in request.form.items():
+                index = int(key)
 
-            # detect form resubmission by checking if form has inputs that are already assigned
-            if len(session["io"][index][1]) < 3:
-                # if passing, reassign io element with a value arg
-                session["io"][index] = ("input", (*session["io"][index][1], value))
+                # detect form resubmission by checking if form has inputs that are already assigned
+                if len(session["io"][index][1]) < 3:
+                    # if passing, reassign io element with a value arg
+                    session["io"][index] = ("input", (*session["io"][index][1], value), session["io"][index][2], session["io"][index][2])
+        else:
+            # if form is empty, but submission is made and most recent input was a button, then assume button was pressed and give it a submitted value
+            # find index of most recent input by iterating backwards through session stack
+            for i in range(1, len(session["io"])+1):
+                func_name = session["io"][-i][0]
+                func_magic = session["io"][-i][2]
+                # check if input and magic is "button"
+                if func_name == 'input' and func_magic == "button":
+                    input_id, input_label, _ = session["io"][-i][1]
+                    magic = session["io"][-i][2]
+                    magic_args = session["io"][-i][3]
+                    session["io"][-i] = (func_name, (input_id, input_label, True), magic, magic_args)
 
     # track input/print elements encountered over multiple re-runs of the script
     if "io" not in session:
@@ -63,13 +77,15 @@ def index():
     # if error raised, then previous input is likely invalid
     # find last input and delete user input (and delete any elements past this point)
     if error:
-        # find index of most recent input
+        # find index of most recent input by iterating backwards through session stack
         for i in range(1, len(session["io"])+1):
             func_name = session["io"][-i][0]
             if func_name == 'input':
                 # delete input_value by recreating func tuple
                 input_id, input_label, _ = session["io"][-i][1]
-                session["io"][-i] = (func_name, (input_id, input_label))
+                magic = session["io"][-i][2]
+                magic_args = session["io"][-i][3]
+                session["io"][-i] = (func_name, (input_id, input_label), magic, magic_args)
                 
                 # delete all elements past this point
                 session["io"] = session["io"][:len(session["io"])-i+1]

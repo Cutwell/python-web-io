@@ -4,12 +4,17 @@
 <form id="mainForm" method="post">
     {% for func in io %}
     {% if func[0] == 'print' %}
-    <p>{{func[1]}}</p>
+    <{{func[2]}} {% if func[3] %}{{func[3]}}{% endif %}>{{func[1]}}</{{func[2]}}>
     {% elif func[0] == 'input' %}
     <p>
+        {% if func[2] == "button" %}
+        <input name="{{func[1][0]}}" value="{{func[1][1]}}" {% if func[1]|length==3 %} disabled {% endif %}
+        required type="submit" form="mainForm" {% if func[3] %}{{func[3]}}{% endif %}>
+        {% else %}
         <label for="{{func[1][0]}}">{{func[1][1]}}</label>
-        <input type=text name="{{func[1][0]}}" {% if func[1]|length==3 %} value="{{func[1][2]}}" disabled {% endif %}
-            required>
+        <input name="{{func[1][0]}}" {% if func[1]|length==3 %} value="{{func[1][2]}}" disabled {% endif %}
+            required type="{{func[2]}}" {% if func[3] %}{{func[3]}}{% endif %}>
+        {%endif%}
     </p>
     {% endif %}
     {% endfor %}
