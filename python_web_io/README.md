@@ -17,13 +17,16 @@ $ python_web_io .\example.py
 |`--icon "🎯"`|Optional|Set an emoji icon for the browser tab / website icon.|
 |`--debug`|Optional|Run the Flask server with debug output enabled.|
 
-## Magic
+### Magic
 `input()` and `print()` both support the `magic` keyword argument. For `input()`, `magic` sets the `type` of the input html element. For `print()`, `magic` sets the element type.
 
 ||Magic|Default|
 |:---:|:---:|:---:|
 |`input()`|`button`, `checkbox`, `color`, `date`, `datetime-local`, `email`, `file`, `image`, `month`, `number`, `password`, `radio`, `range`, `search`, `tel`, `text`, `time`, `url`, `week`|`text`|
 |`print()`|`address`, `footer`, `aside`, `header`, `h1..6`, `blockquote`, `p`, `b`, `abbr`, `code`, `em`, `i`, `mark`, `q`, `s`, `small`, `span`, `strong`, |`p`|
+
+#### Arguments
+`input()` and `print()` both support the `magic_args` keyword argument. `magic_args` accepts a dictionary, which can be used to set attributes for the html element.
 
 ## License
 MIT
