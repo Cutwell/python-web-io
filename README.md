@@ -10,20 +10,8 @@ $ export FLASK_SECRET_KEY="someSecureSecretKey"
 $ python_web_io .\example.py
 ```
 
-## Getting started
-1. Fork this repository.
-From inside `/python_web_io`:
-2. Create a `.envrc` file, setting `FLASK_SECRET_KEY` as per `python_web_io/.envrc.example`.
-3. Install poetry dependencies with `poetry install`.
-4. Try running the `example.py` script using `poetry run python python_web_io example.py`.
-
-## Config
-|Argument|||
-|:---:|:---:|:---:|
-|`"example.py"`|Required|Specify the file path for the app Python script / entrypoint.|
-|`--title "Python Web I/O"`|Optional|Set a title for the browser tab / website title.|
-|`--icon "🎯"`|Optional|Set an emoji icon for the browser tab / website icon.|
-|`--debug`|Optional|Run the Flask server with debug output enabled.|
+## Documentation
+View [`python_web_io/README.md`](https://github.com/Cutwell/python-web-io/tree/main/python_web_io) for configuration and customisation.
 
 ## License
 MIT
