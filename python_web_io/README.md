@@ -23,7 +23,7 @@ $ python_web_io .\example.py
 ||Magic|Default|
 |:---:|:---:|:---:|
 |`input()`|`button`, `checkbox`, `color`, `date`, `datetime-local`, `email`, `file`, `image`, `month`, `number`, `password`, `radio`, `range`, `search`, `tel`, `text`, `time`, `url`, `week`|`text`|
-|`print()`|`address`, `footer`, `aside`, `header`, `h1..6`, `blockquote`, `p`, `b`, `abbr`, `code`, `em`, `i`, `mark`, `q`, `s`, `small`, `span`, `strong`, |`p`|
+|`print()`|`style`, `img`, `address`, `footer`, `aside`, `header`, `h1..6`, `blockquote`, `p`, `b`, `abbr`, `code`, `em`, `i`, `mark`, `q`, `s`, `small`, `span`, `strong`, |`p`|
 
 #### Arguments
 `input()` and `print()` both support the `magic_args` keyword argument. `magic_args` accepts a dictionary, which can be used to set attributes for the html element.

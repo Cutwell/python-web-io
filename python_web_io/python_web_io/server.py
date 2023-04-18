@@ -7,7 +7,7 @@ from python_web_io.override import (
     print,
     Exec,
 )  # input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
-from python_web_io.cache import Cache
+from python_web_io.cache import Cache, has_cache_expired, load_cache
 
 app = Flask(__name__)
 
@@ -37,8 +37,17 @@ def index():
         html: Rendered index.html page, displaying the user input as reached so far.
     """
 
+    # check if cached script has expired (has script been modified since we read from it?)
+    if has_cache_expired():
+        builtins.print("INFO: Refreshing expired cache.")
+        # reset session
+        session["io"] = []
+
+        # reload script into Cache
+        load_cache()
+
     # POST request indicates user is submitting input
-    if request.method == "POST":
+    elif request.method == "POST":
         if len(request.form) > 0:
             # if form has data
             # iterate the form inputs/submission
@@ -82,7 +91,7 @@ def index():
             func_name = session["io"][-i][0]
             if func_name == 'input':
                 # delete input_value by recreating func tuple
-                input_id, input_label, _ = session["io"][-i][1]
+                input_id, input_label = session["io"][-i][1]
                 magic = session["io"][-i][2]
                 magic_args = session["io"][-i][3]
                 session["io"][-i] = (func_name, (input_id, input_label), magic, magic_args)
@@ -98,7 +107,7 @@ def index():
     )
 
 
-@app.route("/reset", methods=["POST"])
+@app.route("/reset", methods=["GET", "POST"])
 def reset():
     """
     Reset the user session.

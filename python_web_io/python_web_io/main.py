@@ -1,6 +1,6 @@
 import argparse
 
-from python_web_io.cache import Cache
+from python_web_io.cache import Cache, load_cache
 from python_web_io.server import app
 
 
@@ -11,13 +11,13 @@ def main(filepath: str, title: str, icon: str, debug: bool):
     Arguments:
         filepath (str): filepath to script / entrypoint.
     """
-    with open(filepath, "r") as file:
-        script = file.read()
 
     # save args to config / Cache
-    Cache.set("script", script)
+    Cache.set("source", filepath)
     Cache.set("title", title)
     Cache.set("icon", icon)
+
+    load_cache()
 
     # start the Flask server
     app.run(debug=debug)

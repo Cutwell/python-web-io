@@ -15,3 +15,6 @@ View [`python_web_io/README.md`](https://github.com/Cutwell/python-web-io/tree/m
 
 ## License
 MIT
+
+### Attribution
+We use [simple.css](https://simplecss.org/) to style the generated webpages and improve the UI.
