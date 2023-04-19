@@ -1,8 +1,10 @@
-from functools import cache
 import urllib.request
 import csv
 import codecs
 import math
+import time
+import python_web_io
+
 
 # custom CSS
 print("#logo{height: 32px; width: 32px}#title{font-size:2em}", magic="style")
@@ -20,7 +22,7 @@ print("Color palette!", magic="span", magic_attrs={"id": "title"})
 print(magic="br")
 
 
-@cache
+@python_web_io.cache_to_file('cache_csv.json')
 def load_csv():
     # load color names from url
     url = "https://unpkg.com/color-name-list/dist/colornames.bestof.csv"
@@ -49,9 +51,6 @@ def get_col(arr, col):
 
 
 def get_nearest_color_name(hex_color):
-    import builtins
-    builtins.print(globals())
-
     colors = load_csv()
 
     hex_3d_point = hex_to_rgb(hex_color)
@@ -78,7 +77,6 @@ def get_nearest_color_name(hex_color):
 
 
 def local_time():
-    import time
     seconds = time.time()
     curr_local_time = time.ctime(seconds)
     return curr_local_time
