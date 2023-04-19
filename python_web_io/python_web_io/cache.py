@@ -6,13 +6,13 @@ class Cache:
     """
 
     __conf = {
-        "source": "",      # Python script source
-        "script": "",   # Python user script.
+        "source": "",      # Python code source
+        "code": "",   # Python user code.
         "title": "",    # Title for the tab / form
         "icon": "",     # Emoji icon for the tab / website
         "last_read_time": 0,    # Epoch time of last file access
     }
-    __setters = ["source", "script", "title", "icon", "last_read_time"]
+    __setters = ["source", "code", "title", "icon", "last_read_time"]
 
     @staticmethod
     def get(name):
@@ -52,8 +52,11 @@ def has_cache_expired():
 def load_cache():
     filepath = Cache.get('source')
 
-    with open(filepath, "r") as file:
-        script = file.read()
+    with open(filepath, mode="r", encoding="utf-8") as file:
+        code = file.read()
+    
+    # compile the code
+    compiled_code = compile(code, filepath, "exec")
     
     Cache.set("last_read_time", os.path.getmtime(filepath))
-    Cache.set("script", script)
+    Cache.set("code", compiled_code)

@@ -1,7 +1,7 @@
 from flask import session
 
 
-def input(prompt: str = "Input", magic: str = "text", magic_args: dict = ()):
+def input(prompt: str = "Input", magic: str = "text", magic_attrs: dict = ()):
     """
     Override default input function.
 
@@ -12,7 +12,7 @@ def input(prompt: str = "Input", magic: str = "text", magic_args: dict = ()):
     Arguments:
         prompt (str): If the prompt argument is present, it is written to standard output without a trailing newline.
         magic (str): Magic for defining the input element type.
-        magic_args (dict): Accompanying kwargs for the magic setting, converted to string and used to set element attributes.
+        magic_attrs (dict): Accompanying kwargs for the magic setting, converted to string and used to set element attributes.
 
     Returns:
         output (str): The function reads from input, converts it to a string (stripping a trailing newline if present), and returns that.
@@ -31,14 +31,14 @@ def input(prompt: str = "Input", magic: str = "text", magic_args: dict = ()):
             raise ExecInterrupt
 
     else:  # new element
-        magic_attrs = dict_to_string(magic_args) if magic_args else None
+        magic_attrs = dict_to_string(magic_attrs) if magic_attrs else None
         session["io"].append(("input", (index, prompt), magic, magic_attrs))
         # exit the script exec() early, to prompt user for input
         raise ExecInterrupt
 
 
 def print(
-    *objects, sep: str = " ", end: str = "\n", file: object = None, flush: bool = False, magic: str = "p", magic_args: dict = {}
+    *objects, sep: str = " ", end: str = "\n", file: object = None, flush: bool = False, magic: str = "p", magic_attrs: dict = {}
 ):
     """
     Override default print function.
@@ -50,7 +50,7 @@ def print(
         file (object): file argument must be an object with a write(string) method; if it is not present or None, sys.stdout will be used.
         flush (bool): output buffering is usually determined by file. However, if flush is true, the stream is forcibly flushed.
         magic (str): Magic for defining the output element tag.
-        magic_args (dict): Accompanying kwargs for the magic setting, converted to string and used to set element attributes.
+        magic_attrs (dict): Accompanying kwargs for the magic setting, converted to string and used to set element attributes.
     """
 
     session["counter"] += 1
@@ -58,7 +58,7 @@ def print(
     if session["counter"] > len(session["io"]):  # if new element
         strings = [str(obj) for obj in objects]
         output = f"{sep.join(strings)}{end}"
-        magic_attrs = dict_to_string(magic_args) if magic_args else None
+        magic_attrs = dict_to_string(magic_attrs) if magic_attrs else None
         session["io"].append(("print", output, magic, magic_attrs))
 
 

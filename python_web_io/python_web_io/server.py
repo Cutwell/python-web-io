@@ -81,11 +81,13 @@ def index():
 
     # execute the user script to collect IO elements
     # if an unencountered input is found, the script terminates early and the user is prompted to provide input
-    error = Exec(Cache.get("script"))
+    error = Exec(Cache.get("code"), {"print": print, "input":input})
 
     # if error raised, then previous input is likely invalid
     # find last input and delete user input (and delete any elements past this point)
     if error:
+        builtins.print(error)
+        builtins.print(session["io"])
         # find index of most recent input by iterating backwards through session stack
         for i in range(1, len(session["io"])+1):
             func_name = session["io"][-i][0]
