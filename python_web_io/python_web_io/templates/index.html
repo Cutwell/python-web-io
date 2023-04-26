@@ -18,7 +18,9 @@
     </p>
     {% endif %}
     {% endfor %}
-    {% if error %}<code>Error: {{error}}</code>{% endif %}
+    {% if error %}
+    <code>Error: {{error}}</code>
+    {% endif %}
 </form>
 <form id="resetForm" method="post" action="/reset"></form>
 

@@ -4,28 +4,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Python Web IO App</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    {%if page.name %}
+    <title>{{page.name}}</title>
+    {% endif %}
+    {%if page.icon %}
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{{icon}}</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{{page.icon}}</text></svg>">
+    {% endif %}
 
     <meta http-equiv='cache-control' content='no-cache'>
     <meta http-equiv='expires' content='0'>
     <meta http-equiv='pragma' content='no-cache'>
+    {%if page.css %}
+    <link rel="stylesheet" type="text/css" href="{{page.css}}">
+    {% endif %}
+    <style>
+        .popup-wrapper {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 5px;
+            background-color:initial;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
     <main>
-        <h1>{{title}}</h1>
-
+        <br>
         <div class="content">
             {% block content %} {% endblock %}
         </div>
+
+        <div class="popup-wrapper popup-wrapper-1">
+            <div class="popup">
+                <div class="close-button">&times;</div>
+                <h3 class="center">About</h3>
+                <hr>
+                {% if about.author %}
+                <p>Author: {{about.author}}</p>
+                {% endif %}
+                {% if about.description %}
+                <p>Description: {{about.description}}</p>
+                {% endif %}
+                {% if about.github %}
+                <p><a target="_blank" class="button" href="{{about.github}}">Github</a></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="popup-wrapper popup-wrapper-2">
+            <div class="popup">
+                <div class="close-button">&times;</div>
+                <h3 class="center">Help</h3>
+                <hr>
+                <div class="center">
+                    {% if project.homepage %}
+                    <a target="_blank" class="button" href="{{project.homepage}}">Homepage</a>
+                    {% endif %}
+                    {% if project.license %}
+                    <a target="_blank" class="button" href="{{project.license}}">License</a>
+                    {% endif %}
+                    {% if project.issues %}
+                    <a target="_blank" class="button" href="{{project.issues}}">Report an issue</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </main>
 
-    <footer>
-        <p>Created with <a href="https://github.com/Cutwell/python-web-io"><code>Python Web I/O</code></a>.</p>
+    <footer class="center">
+        <p>
+            Created with <a target="_blank"
+                href="https://github.com/Cutwell/python-web-io"><code>Python Web I/O</code></a> |
+            <a href="#" class="open-popup-1">About</a> |
+            <a href="#" class="open-popup-2">Help</a>
+        </p>
     </footer>
+
+    <script>
+        const popupWrappers = document.querySelectorAll('.popup-wrapper');
+        const popups = document.querySelectorAll('.popup');
+        const closeButtons = document.querySelectorAll('.close-button');
+
+        function openPopup(popupWrapper) {
+            popupWrapper.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePopup(popupWrapper) {
+            popupWrapper.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        popups.forEach(function (popup) {
+            popup.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        });
+
+        popupWrappers.forEach(function (popupWrapper, index) {
+            popupWrapper.addEventListener('click', function () {
+                closePopup(popupWrapper);
+            });
+
+            closeButtons[index].addEventListener('click', function () {
+                closePopup(popupWrapper);
+            });
+        });
+
+        const popup1 = document.querySelector('.popup-wrapper-1');
+        const popup2 = document.querySelector('.popup-wrapper-2');
+
+        document.querySelector('.open-popup-1').addEventListener('click', function () {
+            openPopup(popup1);
+        });
+
+        document.querySelector('.open-popup-2').addEventListener('click', function () {
+            openPopup(popup2);
+        });
+    </script>
 </body>
 
 </html>

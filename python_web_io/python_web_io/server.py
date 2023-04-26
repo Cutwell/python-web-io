@@ -1,13 +1,22 @@
+import logging
 import os
-import builtins
 
-from flask import Flask, session, request, render_template, url_for, redirect
-from python_web_io.override import (
-    input,
-    print,
-    Exec,
-)  # input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
+from flask import (
+    Flask,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+
+# input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
 from python_web_io.cache import Cache, has_cache_expired, load_cache
+from python_web_io.override import (
+    Exec,
+    Input,
+    Print,
+)
 
 app = Flask(__name__)
 
@@ -22,7 +31,9 @@ def internal_error(error):
     A custom 500 error page should inform the user of this issue and direct them to clear cookies / close the tab to fix.
     """
 
-    return render_template("500.html", title=Cache.get("title"), icon=Cache.get("icon"), error=error)
+    return render_template(
+        "500.html", name=Cache.get("name"), icon=Cache.get("icon"), error=error
+    )
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -39,7 +50,7 @@ def index():
 
     # check if cached script has expired (has script been modified since we read from it?)
     if has_cache_expired():
-        builtins.print("INFO: Refreshing expired cache.")
+        logging.info("Refreshing expired cache.")
         # reset session
         session["io"] = []
 
@@ -58,19 +69,29 @@ def index():
                 # detect form resubmission by checking if form has inputs that are already assigned
                 if len(session["io"][index][1]) < 3:
                     # if passing, reassign io element with a value arg
-                    session["io"][index] = ("input", (*session["io"][index][1], value), session["io"][index][2], session["io"][index][2])
+                    session["io"][index] = (
+                        "input",
+                        (*session["io"][index][1], value),
+                        session["io"][index][2],
+                        session["io"][index][2],
+                    )
         else:
             # if form is empty, but submission is made and most recent input was a button, then assume button was pressed and give it a submitted value
             # find index of most recent input by iterating backwards through session stack
-            for i in range(1, len(session["io"])+1):
+            for i in range(1, len(session["io"]) + 1):
                 func_name = session["io"][-i][0]
                 func_magic = session["io"][-i][2]
                 # check if input and magic is "button"
-                if func_name == 'input' and func_magic == "button":
+                if func_name == "input" and func_magic == "button":
                     input_id, input_label, _ = session["io"][-i][1]
                     magic = session["io"][-i][2]
                     magic_args = session["io"][-i][3]
-                    session["io"][-i] = (func_name, (input_id, input_label, True), magic, magic_args)
+                    session["io"][-i] = (
+                        func_name,
+                        (input_id, input_label, True),
+                        magic,
+                        magic_args,
+                    )
 
     # track input/print elements encountered over multiple re-runs of the script
     if "io" not in session:
@@ -81,31 +102,41 @@ def index():
 
     # execute the user script to collect IO elements
     # if an unencountered input is found, the script terminates early and the user is prompted to provide input
-    error = Exec(Cache.get("code"), {"print": print, "input":input})
+    error = Exec(Cache.get("code"), {"print": Print, "input": Input})
 
     # if error raised, then previous input is likely invalid
     # find last input and delete user input (and delete any elements past this point)
     if error:
-        builtins.print(error)
-        builtins.print(session["io"])
+        logging.error(error)
+        logging.debug(f"Session stack log: {session['io']}")
         # find index of most recent input by iterating backwards through session stack
-        for i in range(1, len(session["io"])+1):
+        for i in range(1, len(session["io"]) + 1):
             func_name = session["io"][-i][0]
-            if func_name == 'input':
+            if func_name == "input":
                 # delete input_value by recreating func tuple
                 input_id, input_label = session["io"][-i][1]
                 magic = session["io"][-i][2]
                 magic_args = session["io"][-i][3]
-                session["io"][-i] = (func_name, (input_id, input_label), magic, magic_args)
-                
+                session["io"][-i] = (
+                    func_name,
+                    (input_id, input_label),
+                    magic,
+                    magic_args,
+                )
+
                 # delete all elements past this point
-                session["io"] = session["io"][:len(session["io"])-i+1]
+                session["io"] = session["io"][: len(session["io"]) - i + 1]
 
                 break
 
     # render collected IO into a form - inputs with submitted values are disabled
     return render_template(
-        "index.html", title=Cache.get("title"), icon=Cache.get("icon"), io=session["io"], error=error,
+        "index.html",
+        page=Cache.get("page"),
+        io=session["io"],
+        error=error,
+        about=Cache.get("about"),
+        project=Cache.get("project"),
     )
 
 
@@ -119,7 +150,3 @@ def reset():
 
     # render collected IO into a form - inputs with submitted values are disabled
     return redirect(url_for("index"))
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

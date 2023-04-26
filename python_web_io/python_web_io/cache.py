@@ -1,6 +1,7 @@
 import os
-import json
+import pickle
 import functools
+
 
 class Cache:
     """
@@ -8,13 +9,27 @@ class Cache:
     """
 
     __conf = {
-        "source": "",      # Python code source
-        "code": "",   # Python user code.
-        "title": "",    # Title for the tab / form
-        "icon": "",     # Emoji icon for the tab / website
-        "last_read_time": 0,    # Epoch time of last file access
+        "source": "",  # Python code source (filepath)
+        "code": "",  # Python user code (compiled)
+        "last_read_time": 0,  # Epoch time of last file access
+        "author": {},  # project author, author github link, project description
+        "project": {},  # links for license, homepage, bug reporting
+        "page": {
+            "name": "Python Web I/O",
+            "icon": "🎯",
+            "css": "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css",
+        },  # customisation for name, icon, css href
     }
-    __setters = ["source", "code", "title", "icon", "last_read_time"]
+    __setters = [
+        "source",
+        "code",
+        "name",
+        "icon",
+        "last_read_time",
+        "about",
+        "project",
+        "page",
+    ]
 
     @staticmethod
     def get(name):
@@ -33,17 +48,17 @@ class Cache:
 def has_cache_expired():
     """
     Check if a file has been updated since it was last read.
-    
+
     Args:
         file_path (str): The path of the file to check.
         last_read_time (float): The last time the file was read, in seconds since the epoch.
-        
+
     Returns:
         bool: True if the file has been updated since it was last read, False otherwise.
     """
     # Get the last modified time of the file
     modified_time = os.path.getmtime(Cache.get("source"))
-    
+
     # Compare the last modified time with the last read time
     if modified_time > Cache.get("last_read_time"):
         return True
@@ -52,19 +67,19 @@ def has_cache_expired():
 
 
 def load_cache():
-    filepath = Cache.get('source')
+    filepath = Cache.get("source")
 
     with open(filepath, mode="r", encoding="utf-8") as file:
         code = file.read()
-    
+
     # compile the code
     compiled_code = compile(code, filepath, "exec")
-    
+
     Cache.set("last_read_time", os.path.getmtime(filepath))
     Cache.set("code", compiled_code)
 
 
-def cache_to_file(file_path):
+def cache_to_file(file_path: str = "cache.pickle"):
     """
     A decorator that caches the output of a function to a file and returns the cached output if the function is called again
     with the same arguments.
@@ -76,7 +91,7 @@ def cache_to_file(file_path):
     A decorated function that wraps the original function with caching functionality.
 
     Examples:
-    >>> @cache_to_file('cache.json')
+    >>> @cache_to_file('cache.pickle')
     ... def expensive_function(arg):
     ...     # Calculate the result here
     ...     return result
@@ -90,9 +105,10 @@ def cache_to_file(file_path):
 
     The `key` variable in the wrapper function is a hashable tuple that combines the positional and keyword arguments of the
     function call into a single value that can be used as a key for the cache dictionary. The `try` block in the wrapper
-    function attempts to load the cache from the file, but if the file is not found or cannot be parsed as JSON, it creates
-    an empty cache dictionary instead.
+    function attempts to load the cache from the file, but if the file is not found or cannot be parsed, it creates
+    an empty cache instead.
     """
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -101,11 +117,10 @@ def cache_to_file(file_path):
 
             # Check if the result is already in the cache file
             try:
-                with open(file_path, 'r') as f:
-                    cache = json.load(f)
-            except (FileNotFoundError, json.JSONDecodeError):
+                with open(file_path, "rb") as f:
+                    cache = pickle.load(f)
+            except (FileNotFoundError, pickle.UnpicklingError):
                 cache = {}
-
             if key in cache:
                 return cache[key]
 
@@ -114,8 +129,8 @@ def cache_to_file(file_path):
 
             # Store the result in the cache file for next time
             cache[key] = result
-            with open(file_path, 'w') as f:
-                json.dump(cache, f)
+            with open(file_path, "wb") as f:
+                pickle.dump(cache, f)
 
             return result
 

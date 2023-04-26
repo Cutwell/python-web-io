@@ -1,7 +1,8 @@
 from flask import session
+import logging
 
 
-def input(prompt: str = "Input", magic: str = "text", magic_attrs: dict = ()):
+def Input(prompt: str = "Input", magic: str = "text", magic_attrs: dict = ()):
     """
     Override default input function.
 
@@ -37,7 +38,7 @@ def input(prompt: str = "Input", magic: str = "text", magic_attrs: dict = ()):
         raise ExecInterrupt
 
 
-def print(
+def Print(
     *objects, sep: str = " ", end: str = "\n", file: object = None, flush: bool = False, magic: str = "p", magic_attrs: dict = {}
 ):
     """
@@ -69,10 +70,10 @@ class ExecInterrupt(Exception):
 def Exec(source, globals=None, locals=None):
     try:
         exec(source, globals, locals)
-    except ExecInterrupt:
-        pass
+    except ExecInterrupt as e:
+        logging.debug(e)
     except Exception as e:
-        return e
+        logging.debug(e)
 
 
 def dict_to_string(d):

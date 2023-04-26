@@ -3,26 +3,10 @@ import csv
 import codecs
 import math
 import time
-import python_web_io
+import python_web_io as io
 
 
-# custom CSS
-print("#logo{height: 32px; width: 32px}#title{font-size:2em}", magic="style")
-
-print(
-    magic="img",
-    magic_attrs={
-        "id": "logo",
-        "src": "https://cdn2.iconfinder.com/data/icons/activity-5/50/1F3A8-artist-palette-1024.png",
-    },
-)
-
-print("Color palette!", magic="span", magic_attrs={"id": "title"})
-
-print(magic="br")
-
-
-@python_web_io.cache_to_file('cache_csv.json')
+@io.cache_to_file('cache.pickle')
 def load_csv():
     # load color names from url
     url = "https://unpkg.com/color-name-list/dist/colornames.bestof.csv"
@@ -50,6 +34,7 @@ def get_col(arr, col):
     return map(lambda x: x[col], arr)
 
 
+@io.cache_to_file('cache.pickle')
 def get_nearest_color_name(hex_color):
     colors = load_csv()
 
@@ -82,9 +67,28 @@ def local_time():
     return curr_local_time
 
 
-print(f"Local time: {local_time()}", magic="small")
+def main():
+    # custom CSS
+    print("#logo{height: 32px; width: 32px}#title{font-size:2em}", magic="style")
 
-input("Click me to start!", magic="button")
+    print(
+        magic="img",
+        magic_attrs={
+            "id": "logo",
+            "src": "https://cdn2.iconfinder.com/data/icons/activity-5/50/1F3A8-artist-palette-1024.png",
+        },
+    )
 
-hex_color = input("What's your favourite color?", magic="color")
-print(f"Nice! That colour reminds me of {get_nearest_color_name(hex_color)}!")
+    print("Color palette!", magic="span", magic_attrs={"id": "title"})
+
+    print(magic="br")
+
+    print(f"Local time: {local_time()}", magic="small")
+
+    input("Click me to start!", magic="button")
+
+    hex_color = input("What's your favourite color?", magic="color")
+    print(f"Nice! That colour looks like {get_nearest_color_name(hex_color)}!")
+
+
+main()

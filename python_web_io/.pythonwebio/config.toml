@@ -1,0 +1,19 @@
+[page]
+name = "Python web I/O App"
+icon = "🎯"
+css = "https://unpkg.com/simpledotcss/simple.min.css"
+
+[about]
+author = "Zachary"
+github = "https://github.com/Cutwell"
+description = "Generate a webpage as a GUI for a Python script, and serve from anywhere."
+
+[project]
+homepage = "https://github.com/Cutwell/python-web-io"
+license = "https://github.com/Cutwell/python-web-io/blob/main/LICENSE"
+issues = "https://github.com/Cutwell/python-web-io/issues/new"
+
+[flask]
+host = '127.0.0.1'
+port = 5000
+debug = false

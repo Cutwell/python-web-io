@@ -12,6 +12,7 @@ repository = "https://github.com/Cutwell/python-web-io"
 python = "^3.10"
 flask = "^2.2.3"
 flask-session = "^0.4.0"
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
