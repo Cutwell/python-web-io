@@ -16,6 +16,7 @@ from python_web_io.override import (
     Exec,
     Input,
     Print,
+    Entry,
 )
 
 app = Flask(__name__)
@@ -32,7 +33,7 @@ def internal_error(error):
     """
 
     return render_template(
-        "500.html", name=Cache.get("name"), icon=Cache.get("icon"), error=error
+        "500.html", page=Cache.get("page"), error=error
     )
 
 
@@ -102,7 +103,13 @@ def index():
 
     # execute the user script to collect IO elements
     # if an unencountered input is found, the script terminates early and the user is prompted to provide input
-    error = Exec(Cache.get("code"), {"print": Print, "input": Input})
+    namespace = {"print": Print, "input": Input}
+    error = Exec(Cache.get("code"), namespace)
+
+    # if an entrypoint is defined, run that function (from the created namespace)
+    script = Cache.get('script')
+    if script['entrypoint']:
+        Entry(namespace[script['entrypoint']])
 
     # if error raised, then previous input is likely invalid
     # find last input and delete user input (and delete any elements past this point)

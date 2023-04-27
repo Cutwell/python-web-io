@@ -67,13 +67,25 @@ class ExecInterrupt(Exception):
     pass
 
 
+def allow_ExecInterrupt(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ExecInterrupt as e:
+            logging.debug(e)
+        except Exception as e:
+            logging.debug(e)
+    return wrapper
+
+
+@allow_ExecInterrupt
 def Exec(source, globals=None, locals=None):
-    try:
-        exec(source, globals, locals)
-    except ExecInterrupt as e:
-        logging.debug(e)
-    except Exception as e:
-        logging.debug(e)
+    return exec(source, globals, locals)
+
+
+@allow_ExecInterrupt
+def Entry(entry_point):
+    return entry_point()
 
 
 def dict_to_string(d):

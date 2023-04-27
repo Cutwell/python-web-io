@@ -9,10 +9,10 @@ class Cache:
     """
 
     __conf = {
-        "source": "",  # Python code source (filepath)
+        "script": {},  # script filepath and entrypoint
         "code": "",  # Python user code (compiled)
         "last_read_time": 0,  # Epoch time of last file access
-        "author": {},  # project author, author github link, project description
+        "about": {},  # project author, author github link, project description
         "project": {},  # links for license, homepage, bug reporting
         "page": {
             "name": "Python Web I/O",
@@ -21,7 +21,7 @@ class Cache:
         },  # customisation for name, icon, css href
     }
     __setters = [
-        "source",
+        "script",
         "code",
         "name",
         "icon",
@@ -57,7 +57,7 @@ def has_cache_expired():
         bool: True if the file has been updated since it was last read, False otherwise.
     """
     # Get the last modified time of the file
-    modified_time = os.path.getmtime(Cache.get("source"))
+    modified_time = os.path.getmtime(Cache.get("script")['filepath'])
 
     # Compare the last modified time with the last read time
     if modified_time > Cache.get("last_read_time"):
@@ -67,7 +67,7 @@ def has_cache_expired():
 
 
 def load_cache():
-    filepath = Cache.get("source")
+    filepath = Cache.get("script")['filepath']
 
     with open(filepath, mode="r", encoding="utf-8") as file:
         code = file.read()

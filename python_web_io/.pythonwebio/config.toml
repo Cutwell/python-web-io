@@ -1,7 +1,14 @@
+[script]
+filepath = "tests/colors_example.py"
+entrypoint = "main"
+
 [page]
 name = "Python web I/O App"
 icon = "🎯"
-css = "https://unpkg.com/simpledotcss/simple.min.css"
+css = [
+    "https://unpkg.com/normalize.css@8.0.1/normalize.css",
+    "https://unpkg.com/simpledotcss/simple.min.css",
+]
 
 [about]
 author = "Zachary"

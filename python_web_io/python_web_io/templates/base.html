@@ -15,8 +15,13 @@
     <meta http-equiv='cache-control' content='no-cache'>
     <meta http-equiv='expires' content='0'>
     <meta http-equiv='pragma' content='no-cache'>
+    <!-- normalize.css to reset page before applying custom css -->
+    <link rel="stylesheet" type="text/css" href="">
     {%if page.css %}
-    <link rel="stylesheet" type="text/css" href="{{page.css}}">
+    {% for url in page.css %}
+    {% set href = url %}
+    <link rel="stylesheet" type="text/css" href="{{href}}">
+    {% endfor %}
     {% endif %}
     <style>
         .popup-wrapper {
@@ -39,7 +44,14 @@
             border-radius: 5px;
             background-color:initial;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            background-color: #ffffff;
+            color: #000;
             z-index: 10000;
+        }
+
+        .popup a, .popup a:visited {
+            background-color: #ffffff;
+            color: #000;
         }
 
         .close-button {
