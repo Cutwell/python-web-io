@@ -42,14 +42,15 @@
             transform: translate(-50%, -50%);
             padding: 20px;
             border-radius: 5px;
-            background-color:initial;
+            background-color: initial;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             background-color: #ffffff;
             color: #000;
             z-index: 10000;
         }
 
-        .popup a, .popup a:visited {
+        .popup a,
+        .popup a:visited {
             background-color: #ffffff;
             color: #000;
         }
@@ -77,13 +78,15 @@
                 <h3 class="center">About</h3>
                 <hr>
                 {% if about.author %}
-                <p>Author: {{about.author}}</p>
+                <p>
+                Author: {{about.author}}
+                {% if about.profile %}
+                (<a target="_blank" href="{{about.profile}}">profile</a>)
+                {% endif %}
+                </p>
                 {% endif %}
                 {% if about.description %}
                 <p>Description: {{about.description}}</p>
-                {% endif %}
-                {% if about.github %}
-                <p><a target="_blank" class="button" href="{{about.github}}">Github</a></p>
                 {% endif %}
             </div>
         </div>
@@ -95,13 +98,13 @@
                 <hr>
                 <div class="center">
                     {% if project.homepage %}
-                    <a target="_blank" class="button" href="{{project.homepage}}">Homepage</a>
+                    <a target="_blank" href="{{project.homepage}}">Homepage</a> |
                     {% endif %}
                     {% if project.license %}
-                    <a target="_blank" class="button" href="{{project.license}}">License</a>
+                    <a target="_blank" href="{{project.license}}">License</a> |
                     {% endif %}
                     {% if project.issues %}
-                    <a target="_blank" class="button" href="{{project.issues}}">Report an issue</a>
+                    <a target="_blank" href="{{project.issues}}">Report an issue</a>
                     {% endif %}
                 </div>
             </div>

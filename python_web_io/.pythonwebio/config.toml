@@ -12,7 +12,7 @@ css = [
 
 [about]
 author = "Zachary"
-github = "https://github.com/Cutwell"
+profile = "https://github.com/Cutwell"
 description = "Generate a webpage as a GUI for a Python script, and serve from anywhere."
 
 [project]

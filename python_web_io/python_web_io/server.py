@@ -8,6 +8,7 @@ from flask import (
     request,
     session,
     url_for,
+    send_from_directory,
 )
 
 # input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
@@ -157,3 +158,8 @@ def reset():
 
     # render collected IO into a form - inputs with submitted values are disabled
     return redirect(url_for("index"))
+
+
+@app.route('/static/<path:path>')
+def send_report(path):
+    return send_from_directory('static', path)

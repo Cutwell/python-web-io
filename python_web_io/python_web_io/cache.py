@@ -12,7 +12,7 @@ class Cache:
         "script": {},  # script filepath and entrypoint
         "code": "",  # Python user code (compiled)
         "last_read_time": 0,  # Epoch time of last file access
-        "about": {},  # project author, author github link, project description
+        "about": {},  # project author, author link, project description
         "project": {},  # links for license, homepage, bug reporting
         "page": {
             "name": "Python Web I/O",
