@@ -8,19 +8,21 @@ from python_web_io.cache import Cache, load_cache
 from python_web_io.server import app
 
 
-def main(filepath: str = None, debug: bool = False):
+def main(
+    config_filepath: str,
+    script_filepath: str = None,
+    debug: bool = False,
+):
     """
     Loads the contents of a script and executes it.
 
     Arguments:
-        filepath (str): filepath to script / entrypoint.
+        script_filepath (str): script_filepath to script / entrypoint.
     """
 
     # look for a .pythonwebio directory containing a config.toml file.
-    if os.path.exists(".pythonwebio/config.toml") and os.path.isfile(
-        ".pythonwebio/config.toml"
-    ):
-        with open(".pythonwebio/config.toml", "r") as file:
+    if os.path.exists(config_filepath) and os.path.isfile(config_filepath):
+        with open(config_filepath, "r") as file:
             # parse toml into config dict
             config = toml.loads(file.read())
 
@@ -48,14 +50,17 @@ def main(filepath: str = None, debug: bool = False):
         port = config["flask"]["port"] if config["flask"]["port"] else 5000
 
     # allow cli override
-    if filepath:
+    if script_filepath:
         script = Cache.get("script")
         entrypoint = script["entrypoint"] if script["entrypoint"] else None
-        Cache.set("script", {"entrypoint": entrypoint, "filepath": filepath})
+        Cache.set(
+            "script", {"entrypoint": entrypoint, "filepath": script_filepath}
+        )
 
     load_cache()
 
-    if debug:  # enable debug logging
+    if debug:
+        # enable debug logging
         logging.basicConfig(level=logging.DEBUG)
 
     # start the Flask server
@@ -66,14 +71,20 @@ def start():
     parser = argparse.ArgumentParser(
         description="Generate a web UI to iteract with a Python script."
     )
-    parser.add_argument("script", type=str, help="Script filepath (required).")
+    parser.add_argument("--script", type=str, help="Script script_filepath (optional).")
+    parser.add_argument(
+        "--config",
+        type=str,
+        help="Script script_filepath (optional).",
+        default=".pythonwebio/config.toml",
+    )
     parser.add_argument(
         "--debug",
         action="store_true",
         help="Boolean switch to debug the Flask server (True if flagged) (optional).",
     )
     args = parser.parse_args()
-    main(filepath=args.script, debug=args.debug)
+    main(config_filepath=args.config, script_filepath=args.script, debug=args.debug)
 
 
 if __name__ == "__main__":

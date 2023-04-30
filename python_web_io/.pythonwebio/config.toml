@@ -7,7 +7,9 @@ name = "Python web I/O App"
 icon = "🎯"
 css = [
     "https://unpkg.com/normalize.css@8.0.1/normalize.css",
-    "https://unpkg.com/simpledotcss/simple.min.css",
+    "https://fonts.xz.style/serve/inter.css",
+    "https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
+    #"https://unpkg.com/simpledotcss/simple.min.css",
 ]
 
 [about]

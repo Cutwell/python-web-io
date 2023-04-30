@@ -3,17 +3,40 @@
 {% block content %}
 <form id="mainForm" method="post">
     {% for func in io %}
-    {% if func[0] == 'print' %}
-    <{{func[2]}} {% if func[3] %}{{func[3]}}{% endif %}>{{func[1]}}</{{func[2]}}>
-    {% elif func[0] == 'input' %}
+    {% if func.type == 'print' %}
+    <{{func.magic}} {% if func.attrs %}{{func.attrs}}{% endif %}>{{func.attributes.output}}</{{func.magic}}>
+    {% elif func.type == 'input' %}
     <p>
-        {% if func[2] == "button" %}
-        <input name="{{func[1][0]}}" value="{{func[1][1]}}" {% if func[1]|length==3 %} disabled {% endif %}
-        required type="submit" form="mainForm" {% if func[3] %}{{func[3]}}{% endif %}>
+        {% if func.magic == "button" %}
+        {% if func.options %}
+        <label>{{func.attributes.prompt}}</label>
+        {% for option in func.options %}
+        {% set value = option %}
+        <input name="{{func.attributes.index}}" value="{{value}}" {% if func.attributes.output %} disabled {% endif %} required
+            type="submit" form="mainForm" {% if func.attrs %}{{func.attrs}}{% endif %}>
+        {% endfor %}
         {% else %}
-        <label for="{{func[1][0]}}">{{func[1][1]}}</label>
-        <input name="{{func[1][0]}}" {% if func[1]|length==3 %} value="{{func[1][2]}}" disabled {% endif %}
-            required type="{{func[2]}}" {% if func[3] %}{{func[3]}}{% endif %}>
+        <input name="{{func.attributes.index}}" value="{{func.attributes.prompt}}" {% if func.attributes.output %} disabled {% endif %} required
+            type="submit" form="mainForm" {% if func.attrs %}{{func.attrs}}{% endif %}>
+        {% endif %}
+        {% elif func.magic == "radio" or func.magic == "checkbox" %}
+        {% if func.options %}
+        <label>{{func.attributes.prompt}}</label>
+        {% for option in func.options %}
+        {% set value = option %}
+        <input name="{{func.attributes.index}}" value="{{value}}" {% if func.attributes.output %} disabled {% endif %}
+            type="{{func.magic}}" form="mainForm" id="{{value}}" {% if func.attrs %}{{func.attrs}}{% endif %}>
+        <label for="{{value}}">{{value}}</label>
+        {% endfor %}
+        {% else %}
+        <input name="{{func.attributes.index}}" value="{{func.attributes.prompt}}" {% if func.attributes.output %} disabled {% endif %}
+            type="{{func.magic}}" form="mainForm" {% if func.attrs %}{{func.attrs}}{% endif %}>
+        <label for="{{func.attributes.prompt}}">{{func.attributes.prompt}}</label>
+        {% endif %}
+        {% else %}
+        <label for="{{func.attributes.index}}">{{func.attributes.prompt}}</label>
+        <input name="{{func.attributes.index}}" {% if func.attributes.output %} value="{{func.attributes.output}}" disabled {% endif %}
+            type="{{func.magic}}" {% if func.attrs %}{{func.attrs}}{% endif %}>
         {%endif%}
     </p>
     {% endif %}

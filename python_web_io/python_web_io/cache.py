@@ -57,7 +57,7 @@ def has_cache_expired():
         bool: True if the file has been updated since it was last read, False otherwise.
     """
     # Get the last modified time of the file
-    modified_time = os.path.getmtime(Cache.get("script")['filepath'])
+    modified_time = os.path.getmtime(Cache.get("script")["filepath"])
 
     # Compare the last modified time with the last read time
     if modified_time > Cache.get("last_read_time"):
@@ -67,7 +67,7 @@ def has_cache_expired():
 
 
 def load_cache():
-    filepath = Cache.get("script")['filepath']
+    filepath = Cache.get("script")["filepath"]
 
     with open(filepath, mode="r", encoding="utf-8") as file:
         code = file.read()

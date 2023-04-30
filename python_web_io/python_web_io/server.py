@@ -33,9 +33,7 @@ def internal_error(error):
     A custom 500 error page should inform the user of this issue and direct them to clear cookies / close the tab to fix.
     """
 
-    return render_template(
-        "500.html", page=Cache.get("page"), error=error
-    )
+    return render_template("500.html", page=Cache.get("page"), error=error)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -62,38 +60,29 @@ def index():
     # POST request indicates user is submitting input
     elif request.method == "POST":
         if len(request.form) > 0:
+            # consilidate key-value pairs for duplicate keys
+            form = request.form.to_dict(flat=False)
+
             # if form has data
             # iterate the form inputs/submission
             # we don't support re-editing previous submissions yet (past inputs are disabled), but this approach could allow this to change in the future
-            for key, value in request.form.items():
+            for key, value in form.items():
                 index = int(key)
 
-                # detect form resubmission by checking if form has inputs that are already assigned
-                if len(session["io"][index][1]) < 3:
+                # if most recent input has no output assigned, set, else this is a form resubmission
+                if "output" not in session["io"][index]["attributes"]:
                     # if passing, reassign io element with a value arg
-                    session["io"][index] = (
-                        "input",
-                        (*session["io"][index][1], value),
-                        session["io"][index][2],
-                        session["io"][index][2],
-                    )
+                    session["io"][index]["attributes"]["output"] = value
         else:
-            # if form is empty, but submission is made and most recent input was a button, then assume button was pressed and give it a submitted value
+            # if form is empty, but submission is made, then set last empty input as None value
             # find index of most recent input by iterating backwards through session stack
             for i in range(1, len(session["io"]) + 1):
-                func_name = session["io"][-i][0]
-                func_magic = session["io"][-i][2]
                 # check if input and magic is "button"
-                if func_name == "input" and func_magic == "button":
-                    input_id, input_label, _ = session["io"][-i][1]
-                    magic = session["io"][-i][2]
-                    magic_args = session["io"][-i][3]
-                    session["io"][-i] = (
-                        func_name,
-                        (input_id, input_label, True),
-                        magic,
-                        magic_args,
-                    )
+                if (
+                    session["io"][-i]["type"] == "input"
+                    and "output" not in session["io"][-i]["attributes"]
+                ):
+                    session["io"][-i]["attributes"]["output"] = None
 
     # track input/print elements encountered over multiple re-runs of the script
     if "io" not in session:
@@ -108,9 +97,9 @@ def index():
     error = Exec(Cache.get("code"), namespace)
 
     # if an entrypoint is defined, run that function (from the created namespace)
-    script = Cache.get('script')
-    if script['entrypoint']:
-        Entry(namespace[script['entrypoint']])
+    script = Cache.get("script")
+    if script["entrypoint"]:
+        Entry(namespace[script["entrypoint"]])
 
     # if error raised, then previous input is likely invalid
     # find last input and delete user input (and delete any elements past this point)
@@ -119,18 +108,8 @@ def index():
         logging.debug(f"Session stack log: {session['io']}")
         # find index of most recent input by iterating backwards through session stack
         for i in range(1, len(session["io"]) + 1):
-            func_name = session["io"][-i][0]
-            if func_name == "input":
-                # delete input_value by recreating func tuple
-                input_id, input_label = session["io"][-i][1]
-                magic = session["io"][-i][2]
-                magic_args = session["io"][-i][3]
-                session["io"][-i] = (
-                    func_name,
-                    (input_id, input_label),
-                    magic,
-                    magic_args,
-                )
+            if session["io"][-i]["type"] == "input":
+                del session["io"][-i]["type"]["output"]
 
                 # delete all elements past this point
                 session["io"] = session["io"][: len(session["io"]) - i + 1]
@@ -160,6 +139,6 @@ def reset():
     return redirect(url_for("index"))
 
 
-@app.route('/static/<path:path>')
+@app.route("/static/<path:path>")
 def send_report(path):
-    return send_from_directory('static', path)
+    return send_from_directory("static", path)
