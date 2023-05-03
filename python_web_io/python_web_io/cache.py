@@ -3,9 +3,23 @@ import pickle
 import functools
 
 
+class LocalCache:
+    """
+    Create a local cache, to set per-session variables.
+    """
+
+    io = []
+    counter = 0
+
+    @staticmethod
+    def reset():
+        LocalCache.io = []
+        LocalCache.counter = 0
+
+
 class Cache:
     """
-    Create a global Cache, to access config variables from multiple Flask sessions.
+    Create a global cache, to access config variables from multiple Flask sessions.
     """
 
     __conf = {

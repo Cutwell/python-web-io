@@ -1,4 +1,7 @@
-EXAMPLE_PY = tests/colors_example.py
+EXAMPLE_PY = tests/langchain.py
+
+config: # run using config.toml settings
+	@poetry run python_web_io
 
 dev: # run test script locall
 	@poetry run python_web_io --script=$(EXAMPLE_PY)

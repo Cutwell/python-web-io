@@ -7,18 +7,23 @@ import python_web_io as io
 
 
 @io.cache_to_file("cache.pickle")
-def load_csv():
-    # load color names from url
-    url = "https://unpkg.com/color-name-list/dist/colornames.bestof.csv"
+def load_csv(url):
     # fetch the source using urlopen
-
     response = urllib.request.urlopen(url)
+
     # parse the fetched data using csv.read
     # codecs allow us to decode the byte response into a string
     csvfile = csv.reader(codecs.iterdecode(response, "utf-8"))
 
     # skip header
     next(csvfile, None)
+
+    return csvfile
+
+
+@io.cache_to_file("cache.pickle")
+def load_colors(url):
+    csvfile = load_csv(url)
 
     colors = [(name, hexcode, hex_to_rgb(hexcode)) for name, hexcode in csvfile]
 
@@ -36,7 +41,7 @@ def get_col(arr, col):
 
 @io.cache_to_file("cache.pickle")
 def get_nearest_color_name(hex_color):
-    colors = load_csv()
+    colors = load_colors("https://unpkg.com/color-name-list/dist/colornames.bestof.csv")
 
     hex_3d_point = hex_to_rgb(hex_color)
 
@@ -55,10 +60,7 @@ def get_nearest_color_name(hex_color):
 
     for name, hexcode, rgb in colors:
         if hexcode == closest_hex:
-            closest_hex_name = name
-            break
-
-    return closest_hex_name
+            return name
 
 
 def local_time():
@@ -84,18 +86,6 @@ def main():
     print(magic="br")
 
     print(f"Local time: {local_time()}", magic="small")
-
-    i = input("radio", magic="radio", options=["1", "2", "3"])
-    print(i)
-
-    i = input("radio", magic="radio")
-    print(i)
-
-    i = input("checkbox", magic="checkbox", options=["1", "2", "3"])
-    print(i)
-
-    i = input("checkbox", magic="checkbox")
-    print(i)
 
     answer = input("Click to start!", magic="button", options=["Yes", "Also yes"])
 

@@ -1,29 +1,31 @@
 import logging
 import os
+import toml
 
 from flask import (
     Flask,
     redirect,
     render_template,
     request,
+    send_from_directory,
     session,
     url_for,
-    send_from_directory,
 )
+from flask_session import Session
 
 # input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
 from python_web_io.cache import Cache, has_cache_expired, load_cache
 from python_web_io.override import (
+    Entry,
     Exec,
     Input,
     Print,
-    Entry,
 )
 
 app = Flask(__name__)
+app.config.from_prefixed_env()
 
-FLASK_SECRET_KEY = os.environ["FLASK_SECRET_KEY"]
-app.secret_key = bytes(FLASK_SECRET_KEY, "utf-8")
+Session(app)
 
 
 @app.errorhandler(500)
@@ -62,12 +64,13 @@ def index():
         if len(request.form) > 0:
             # consilidate key-value pairs for duplicate keys
             form = request.form.to_dict(flat=False)
-
             # if form has data
             # iterate the form inputs/submission
             # we don't support re-editing previous submissions yet (past inputs are disabled), but this approach could allow this to change in the future
             for key, value in form.items():
                 index = int(key)
+                # unwrap list if single item, else keep as list
+                value = value[0] if len(value) == 1 else value
 
                 # if most recent input has no output assigned, set, else this is a form resubmission
                 if "output" not in session["io"][index]["attributes"]:

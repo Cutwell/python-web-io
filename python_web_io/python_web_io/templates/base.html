@@ -24,6 +24,7 @@
     {% endfor %}
     {% endif %}
     <style>
+        #loading-wrapper,
         .popup-wrapper {
             display: none;
             position: fixed;
@@ -33,6 +34,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 9999;
+            text-align: center;
         }
 
         .popup {
@@ -62,17 +64,94 @@
             font-size: 24px;
             cursor: pointer;
         }
+
+        .lds-ellipsis {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .lds-ellipsis div {
+            position: absolute;
+            top: 33px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #fff;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+
+        .lds-ellipsis div:nth-child(1) {
+            left: 8px;
+            animation: lds-ellipsis1 0.6s infinite;
+        }
+
+        .lds-ellipsis div:nth-child(2) {
+            left: 8px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+
+        .lds-ellipsis div:nth-child(3) {
+            left: 32px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+
+        .lds-ellipsis div:nth-child(4) {
+            left: 56px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+
+        @keyframes lds-ellipsis1 {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes lds-ellipsis3 {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(0);
+            }
+        }
+
+        @keyframes lds-ellipsis2 {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(24px, 0);
+            }
+        }
     </style>
 </head>
 
 <body>
     <main>
+        <div id="loading-wrapper">
+            <div class="lds-ellipsis">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
         <br>
+
         <div class="content">
             {% block content %} {% endblock %}
         </div>
 
-        <div class="popup-wrapper popup-wrapper-1">
+        <div id="popup-wrapper-1" class="popup-wrapper">
             <div class="popup">
                 <div class="close-button">&times;</div>
                 <h3 class="center">About</h3>
@@ -91,7 +170,7 @@
             </div>
         </div>
 
-        <div class="popup-wrapper popup-wrapper-2">
+        <div id="popup-wrapper-2" class="popup-wrapper">
             <div class="popup">
                 <div class="close-button">&times;</div>
                 <h3 class="center">Help</h3>
@@ -109,16 +188,32 @@
                 </div>
             </div>
         </div>
+
     </main>
 
     <footer class="center">
         <p>
             Created with <a target="_blank"
                 href="https://github.com/Cutwell/python-web-io"><code>Python Web I/O</code></a> |
-            <a href="#" class="open-popup-1">About</a> |
-            <a href="#" class="open-popup-2">Help</a>
+            <a href="#" id="open-popup-1">About</a> |
+            <a href="#" id="open-popup-2">Help</a>
         </p>
     </footer>
+
+    <script>
+        const form = document.querySelector('#mainForm');
+        const spinnerWrapper = document.querySelector('#loading-wrapper')
+
+        form.addEventListener('submit', () => {
+            spinnerWrapper.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        form.addEventListener('load', () => {
+            spinnerWrapper.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+    </script>
 
     <script>
         const popupWrappers = document.querySelectorAll('.popup-wrapper');
@@ -151,14 +246,14 @@
             });
         });
 
-        const popup1 = document.querySelector('.popup-wrapper-1');
-        const popup2 = document.querySelector('.popup-wrapper-2');
+        const popup1 = document.querySelector('#popup-wrapper-1');
+        const popup2 = document.querySelector('#popup-wrapper-2');
 
-        document.querySelector('.open-popup-1').addEventListener('click', function () {
+        document.querySelector('#open-popup-1').addEventListener('click', function () {
             openPopup(popup1);
         });
 
-        document.querySelector('.open-popup-2').addEventListener('click', function () {
+        document.querySelector('#open-popup-2').addEventListener('click', function () {
             openPopup(popup2);
         });
     </script>
