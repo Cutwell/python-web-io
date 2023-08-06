@@ -1,5 +1,5 @@
 [script]
-filepath = "examples/weather_app.py"
+filepath = "examples/color_names.py"
 entrypoint = "main"
 
 [page]

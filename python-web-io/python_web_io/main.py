@@ -1,24 +1,24 @@
 import logging
 import os
-from contextlib import asynccontextmanager
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import toml
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.encoders import jsonable_encoder
 from fastapi.templating import Jinja2Templates
-from starsessions import CookieStore, SessionAutoloadMiddleware, SessionMiddleware
+from starsessions import InMemoryStore, SessionAutoloadMiddleware, SessionMiddleware
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from python_web_io.override import (
     Entry,
-    Run_Path,
     Input,
     Print,
+    Run_Path,
 )
 
 
@@ -55,13 +55,9 @@ async def lifespan(app: FastAPI):
         "css": "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css",
     }
 
-    config_filepath = os.getenv(
-        "PYTHONWEBIO_CONFIG_FILEPATH", ".pythonwebio/config.toml"
-    )
-
     # look for a .pythonwebio directory containing a config.toml file.
-    if os.path.exists(config_filepath) and os.path.isfile(config_filepath):
-        with open(config_filepath, "r") as file:
+    if os.path.exists(app.state.config_path) and os.path.isfile(app.state.config_path):
+        with open(app.state.config_path, "r") as file:
             # parse toml into config dict
             config = toml.loads(file.read())
 
@@ -86,6 +82,12 @@ async def lifespan(app: FastAPI):
             # enable debug logging
             logging.basicConfig(level=logging.DEBUG)
 
+    # if set, then running in test mode
+    if app.state.cli_script_config:
+        filepath, entrypoint = app.state.cli_script_config.split(":")
+        app.state.script["filepath"] = filepath
+        app.state.script["entrypoint"] = entrypoint
+
     app.state.compiled_script_cache = None
     app.state.compiled_script_cache_timestamp = time.time()
     update_cached_file_data()
@@ -109,13 +111,16 @@ async def lifespan(app: FastAPI):
     observer.stop()
     observer.join()
 
-
 app = FastAPI(lifespan=lifespan)
 app.secret_key = os.getenv("PYTHONWEBIO_SECRET_KEY", "")
+app.state.cli_script_config = None
+app.state.config_path = os.getenv(
+    "PYTHONWEBIO_CONFIG_FILEPATH", ".pythonwebio/config.toml"
+)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(SessionAutoloadMiddleware)
-app.add_middleware(SessionMiddleware, store=CookieStore(secret_key=app.secret_key))
+app.add_middleware(SessionMiddleware, store=InMemoryStore())
 
 templates = Jinja2Templates(directory="python_web_io/templates")
 
@@ -181,7 +186,7 @@ async def get_html_page(request: Request):
     Display list of IO to client, prompt for the next input.
 
     Returns:
-        html: Rendered index.html page, displaying the user input as reached so far.
+            html: Rendered index.html page, displaying the user input as reached so far.
     """
 
     handle_session(request.session)
@@ -213,16 +218,13 @@ async def post_html_page(
     Display list of IO to client, prompt for the next input.
 
     Returns:
-        html: Rendered index.html page, displaying the user input as reached so far.
+            html: Rendered index.html page, displaying the user input as reached so far.
     """
 
     handle_session(request.session)
 
     data = await request.form()
     form = jsonable_encoder(data)
-
-    print(form)
-    print(request.session["io"])
 
     if len(form) > 0:
         # if form has data
@@ -273,7 +275,7 @@ async def reset(request: Request):
     Display list of IO to client, prompt for the next input.
 
     Returns:
-        html: Rendered index.html page, displaying the user input as reached so far.
+            html: Rendered index.html page, displaying the user input as reached so far.
     """
 
     request.session.clear()
@@ -297,3 +299,28 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         },
         status_code=exc.status_code,
     )
+
+
+if __name__ == "__main__":
+    """
+    If running python_web_io/main.py directly (instead of via uvicorn with an entrypoint), accept CLI arguments.
+    Ideal for quickly testing capabilities without creating `.envrc` or `.pythonwebio/config.toml` files.
+    """
+    
+    import argparse
+    import uvicorn
+
+    def parse_command_line_arguments():
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--script", type=str, default="default_value1", help="Set the python script (override `config.toml` settings) (format: e.g.:`path/to/file.py:main`).")
+        parser.add_argument("--config", type=str, default=".pythonwebio/config.toml", help="Set the `config.toml` filepath directly (default: `.pythonwebio/config.toml`).")
+        parser.add_argument("--host", type=str, default="localhost", help="Host for uvicorn server.")
+        parser.add_argument("--port", type=int, default=8000, help="Port for uvicorn server.")
+        return parser.parse_args()
+
+    # Read command-line arguments and set app.state values
+    args = parse_command_line_arguments()
+    app.state.cli_script_config = args.script
+    app.state.config_path = args.config
+
+    uvicorn.run(app, host=args.host, port=args.port)

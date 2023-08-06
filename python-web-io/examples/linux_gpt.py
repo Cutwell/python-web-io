@@ -29,19 +29,19 @@ def chain():
 
 
 def main():
-    print("LinuxGPT terminal", magic='h2')
+    print("<h2>LinuxGPT terminal</h2>")
 
-    print(f"System prompt: {template}", magic="small")
+    print("<small>System prompt:", template, "</small>")
 
     conversation = chain()
 
     output = conversation.predict(input="ls")
 
-    print(magic="br")
-    print(output, magic="code")
+    print("<br>")
+    print("<code>", output, "</code>")
 
     while True:
-        print(magic="br")
+        print("<br>")
         human_input = input("👩‍💻")
         output = conversation.predict(input=human_input)
-        print(f"🤖: {output}", magic="code")
+        print("<code>", f"🤖: {output}", "</code>")

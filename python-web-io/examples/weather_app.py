@@ -193,9 +193,9 @@ def main():
     date_time_str = dt.strftime("%B %d, %Y %I:%M %p")
     winddirection = weather["current_weather"]["winddirection"]
 
-    print(f"""###Current weather for {city}:
-Last updated ↻: {day_of_week}, {date_time_str}
-Temperature 🌡️: {weather['current_weather']['temperature']}°C
-Wind speed 💨: {weather['current_weather']['windspeed']} km/h, Wind direction 🧭: {winddirection}° ({degrees_to_direction(winddirection)})
-<br>
-""")
+    print(
+        f"###Current weather for {city}:<br>",
+        f"Last updated ↻: {day_of_week}, {date_time_str}<br>",
+        f"Temperature 🌡️: {weather['current_weather']['temperature']}°C<br>",
+        f"Wind speed 💨: {weather['current_weather']['windspeed']} km/h, Wind direction 🧭: {winddirection}° ({degrees_to_direction(winddirection)})"
+    )

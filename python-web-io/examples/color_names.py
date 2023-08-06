@@ -62,18 +62,13 @@ def get_nearest_color_name(hex_color):
 
 
 def main():
-    # custom CSS
-    print("#logo{height: 32px; width: 32px}#title{font-size:2em}", magic="style")
+    print("<style>#logo{height: 32px; width: 32px;}#title{font-size:2em}</style>")
 
     print(
-        magic="img",
-        attrs={
-            "id": "logo",
-            "src": "https://cdn2.iconfinder.com/data/icons/activity-5/50/1F3A8-artist-palette-1024.png",
-        },
+        "<img id='logo' src='https://cdn2.iconfinder.com/data/icons/activity-5/50/1F3A8-artist-palette-1024.png'>",
+        "<span id='title'>Color palette!</span>",
+        "<br>"
     )
-    print("Color palette!", magic="span", attrs={"id": "title"})
-    print(magic="br")
 
-    hex_color = input("What's your favourite color?", magic="color")    
+    hex_color = input("What's your favourite color?", type="color")    
     print(f"Nice! That colour looks like {get_nearest_color_name(hex_color)}!")
