@@ -111,6 +111,7 @@ async def lifespan(app: FastAPI):
     observer.stop()
     observer.join()
 
+
 app = FastAPI(lifespan=lifespan)
 app.secret_key = os.getenv("PYTHONWEBIO_SECRET_KEY", "")
 app.state.cli_script_config = None
@@ -306,16 +307,30 @@ if __name__ == "__main__":
     If running python_web_io/main.py directly (instead of via uvicorn with an entrypoint), accept CLI arguments.
     Ideal for quickly testing capabilities without creating `.envrc` or `.pythonwebio/config.toml` files.
     """
-    
+
     import argparse
     import uvicorn
 
     def parse_command_line_arguments():
         parser = argparse.ArgumentParser()
-        parser.add_argument("--script", type=str, default="default_value1", help="Set the python script (override `config.toml` settings) (format: e.g.:`path/to/file.py:main`).")
-        parser.add_argument("--config", type=str, default=".pythonwebio/config.toml", help="Set the `config.toml` filepath directly (default: `.pythonwebio/config.toml`).")
-        parser.add_argument("--host", type=str, default="localhost", help="Host for uvicorn server.")
-        parser.add_argument("--port", type=int, default=8000, help="Port for uvicorn server.")
+        parser.add_argument(
+            "--script",
+            type=str,
+            default="default_value1",
+            help="Set the python script (override `config.toml` settings) (format: e.g.:`path/to/file.py:main`).",
+        )
+        parser.add_argument(
+            "--config",
+            type=str,
+            default=".pythonwebio/config.toml",
+            help="Set the `config.toml` filepath directly (default: `.pythonwebio/config.toml`).",
+        )
+        parser.add_argument(
+            "--host", type=str, default="localhost", help="Host for uvicorn server."
+        )
+        parser.add_argument(
+            "--port", type=int, default=8000, help="Port for uvicorn server."
+        )
         return parser.parse_args()
 
     # Read command-line arguments and set app.state values
