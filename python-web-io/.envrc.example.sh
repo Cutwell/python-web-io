@@ -3,9 +3,6 @@
 # if testing `tests/linux_gpt.py`, set your OpenAI API Key
 export OPENAI_API_KEY=""
 
-# flask server env vars
-export FLASK_SECRET_KEY=""
-export FLASK_SESSION_PERMANENT=false
-export FLASK_SESSION_USE_SIGNER=true
-# flask server-side sessions env var
-export FLASK_SESSION_TYPE="filesystem"
+# server env vars
+export PYTHONWEBIO_SECRET_KEY=""
+export PYTHONWEBIO_CONFIG_FILEPATH=".pythonwebio/config.toml" 	# defaults to .pythonwebio/config.toml if not set

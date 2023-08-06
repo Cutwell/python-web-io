@@ -14,7 +14,6 @@ countries_cities_coords: https://simplemaps.com/data/world-cities
 countries_continents: https://raw.githubusercontent.com/dbouquin/IS_608/master/NanosatDB_munging/Countries-Continents.csv
 """
 
-
 @io.cache_to_file("cache.pickle")
 def get_csv(url: str = None, filepath: str = None):
     """
@@ -167,7 +166,7 @@ def main():
     # if this case is true, the app will halt here till a reset
     if len(options) == 0:
         print(f"No cities with weather data available for {continent}, {country}.")
-        raise io.ExecInterrupt
+        raise io.RunPyInterrupt
 
     location = input(
         "Select city:",
@@ -200,5 +199,3 @@ Temperature 🌡️: {weather['current_weather']['temperature']}°C
 Wind speed 💨: {weather['current_weather']['windspeed']} km/h, Wind direction 🧭: {winddirection}° ({degrees_to_direction(winddirection)})
 <br>
 """)
-
-main()

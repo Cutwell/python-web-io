@@ -6,7 +6,7 @@
 ## Install
 ```
 $ pip install python-web-io
-$ export FLASK_SECRET_KEY="someSecureSecretKey"
+$ export SECRET_KEY="someSecureSecretKey"
 $ python_web_io .\example.py
 ```
 

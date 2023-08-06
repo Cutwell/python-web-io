@@ -1,10 +1,5 @@
-CONFIG = examples/weather_app.toml
-
-dev: ## run example config
-	@poetry run python_web_io --config=$(CONFIG)
-
-debug: ## run example config locally with Flask server debug enabled
-	@poetry run python_web_io --config=$(CONFIG) --debug
+dev: ## run locally
+	@poetry run uvicorn python_web_io.main:app --reload --port=8000
 
 install: ## install dependencies
 	@poetry config virtualenvs.in-project true; poetry install

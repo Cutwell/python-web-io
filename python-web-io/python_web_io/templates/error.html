@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>500 Internal Server Error</h1>
-<p>{{error}}</p>
+<h1>{{status_code}}: {{detail}}</h1>
 <hr>
 <p>The server has unfortunately forgotten your form progress. Try these steps to fix the issue.</p>
 <ol>

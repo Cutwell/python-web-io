@@ -3,10 +3,10 @@
 
 ## Usage
 ```
-$ export FLASK_SECRET_KEY="someSecureSecretKey"
+$ export SECRET_KEY="someSecureSecretKey"
 $ python_web_io .\example.py
 ```
-* Create a `.envrc` file, setting `FLASK_SECRET_KEY` as per [`python_web_io/.envrc.example`](https://github.com/Cutwell/python-web-io/blob/main/python_web_io/.envrc.example).
+* Create a `.envrc` file, setting `SECRET_KEY` as per [`python_web_io/.envrc.example`](https://github.com/Cutwell/python-web-io/blob/main/python_web_io/.envrc.example).
 * Try running the [`example.py`](https://github.com/Cutwell/python-web-io/blob/main/python_web_io/example.py) script using `python_web_io example.py`.
 
 |Argument|||
