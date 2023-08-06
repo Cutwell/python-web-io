@@ -15,7 +15,7 @@ countries_continents: https://raw.githubusercontent.com/dbouquin/IS_608/master/N
 """
 
 
-# @io.cache_to_file("cache.pickle")
+@io.cache_to_file("cache.pickle")
 def get_csv(url: str = None, filepath: str = None):
     """
     Load CSV file from filepath or URL.
@@ -114,8 +114,8 @@ def degrees_to_direction(degrees):
 
 
 def main():
-    print("🗺️ Global weather webapp", magic="h1")
-    print(magic="br")
+    print("#🗺️ Global weather webapp")
+    print("<br>")
 
     # load countries -> continent mapping from URL
     countries_continents = get_csv(
@@ -123,21 +123,21 @@ def main():
     )
 
     # load cities + lat, lon coordinates -> countries mapping from file
-    countries_cities_coords = get_csv(filepath="tests/worldcities.csv")
+    countries_cities_coords = get_csv(filepath="examples/worldcities.csv")
 
     continents = list(set(list(countries_continents["Continent"])))
 
     continent = input(
         "Select continent:",
-        magic="button",
         options=continents,
-        attrs={"class": "continents"},
+        type="button",
+        _class="continents",
     )
 
-    print(continent, magic="small", attrs={"class": "countries"}, sep=", ")
+    print("<small class='countries'>", continent, "</small>")
 
     # hide continent selection after input
-    print(".continents{display: none!important}", magic="style")
+    print("<style>.continents{display: none!important}</style>")
 
     countries = countries_continents.loc[
         countries_continents["Continent"] == continent, "Country"
@@ -145,15 +145,15 @@ def main():
 
     country = input(
         "Select country:",
-        magic="button",
         options=list(countries),
-        attrs={"class": "countries"},
+        type="button",
+        _class="countries",
     )
 
-    print(continent, country, magic="small", attrs={"class": "cities"}, sep=", ")
+    print(f"<small class='cities'>{continent}, {country}</small>")
 
     # hide country selection after input
-    print(".countries{display: none!important}", magic="style")
+    print("<style>.countries{display: none!important}</style>")
 
     cities = countries_cities_coords.loc[
         countries_cities_coords["country"] == country, ["city", "lat", "lng"]
@@ -162,18 +162,24 @@ def main():
     cities["Location"] = cities.apply(
         lambda row: f"{row['city']} ({row['lat']}, {row['lng']})", axis=1
     )
+    
+    options=cities["Location"].tolist()
+    # if this case is true, the app will halt here till a reset
+    if len(options) == 0:
+        print(f"No cities with weather data available for {continent}, {country}.")
+        raise io.ExecInterrupt
 
     location = input(
         "Select city:",
-        magic="button",
-        options=cities["Location"].tolist(),
-        attrs={"class": "cities"},
+        options=options,
+        type="button",
+        _class="cities",
     )
 
-    print(continent, country, location, magic="small", sep=", ")
+    print(f"<small>{continent}, {country}, {location}</small>")
 
     # hide city selection after input
-    print(".cities{display: none!important}", magic="style")
+    print("<style>.cities{display: none!important}</style>")
 
     row = cities.loc[cities["Location"] == location].iloc[0]
 
@@ -183,22 +189,16 @@ def main():
 
     weather = get_weather(latitude, longitude)
 
-    print(f"Current weather for {city}:", magic="h3")
-
     dt = datetime.datetime.fromisoformat(weather["current_weather"]["time"])
     day_of_week = dt.strftime("%A")
     date_time_str = dt.strftime("%B %d, %Y %I:%M %p")
-    print(f"Last updated ↻: {day_of_week}, {date_time_str}")
-
-    print(f"Temperature 🌡️: {weather['current_weather']['temperature']}°C")
-
     winddirection = weather["current_weather"]["winddirection"]
-    print(
-        f"Wind speed 💨: {weather['current_weather']['windspeed']} km/h, Wind direction 🧭: {winddirection}° ({degrees_to_direction(winddirection)})"
-    )
 
-    print(magic="br")
+    print(f"""###Current weather for {city}:
+Last updated ↻: {day_of_week}, {date_time_str}
+Temperature 🌡️: {weather['current_weather']['temperature']}°C
+Wind speed 💨: {weather['current_weather']['windspeed']} km/h, Wind direction 🧭: {winddirection}° ({degrees_to_direction(winddirection)})
+<br>
+""")
 
-
-if __name__ == "__main__":
-    main()
+main()

@@ -45,7 +45,3 @@ def main():
         human_input = input("👩‍💻")
         output = conversation.predict(input=human_input)
         print(f"🤖: {output}", magic="code")
-
-
-if __name__ == "__main__":
-    main()

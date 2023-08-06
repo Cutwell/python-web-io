@@ -2,11 +2,9 @@ import urllib.request
 import csv
 import codecs
 import math
-import time
 import python_web_io as io
 
 
-@io.cache_to_file("cache.pickle")
 def load_csv(url):
     # fetch the source using urlopen
     response = urllib.request.urlopen(url)
@@ -63,12 +61,6 @@ def get_nearest_color_name(hex_color):
             return name
 
 
-def local_time():
-    seconds = time.time()
-    curr_local_time = time.ctime(seconds)
-    return curr_local_time
-
-
 def main():
     # custom CSS
     print("#logo{height: 32px; width: 32px}#title{font-size:2em}", magic="style")
@@ -80,16 +72,8 @@ def main():
             "src": "https://cdn2.iconfinder.com/data/icons/activity-5/50/1F3A8-artist-palette-1024.png",
         },
     )
-
     print("Color palette!", magic="span", attrs={"id": "title"})
-
     print(magic="br")
 
-    print(f"Local time: {local_time()}", magic="small")
-
-    answer = input("Click to start!", magic="button", options=["Yes", "Also yes"])
-
-    print(f"You answered: {answer}", magic="small")
-
-    hex_color = input("What's your favourite color?", magic="color")
+    hex_color = input("What's your favourite color?", magic="color")    
     print(f"Nice! That colour looks like {get_nearest_color_name(hex_color)}!")

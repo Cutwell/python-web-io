@@ -1,21 +1,20 @@
 [script]
-filepath = "tests/weather_app.py"
-entrypoint = "main"
+filepath = "examples/weather_app.py"
+#entrypoint = "main"
 
 [page]
-name = "Python web I/O App"
-icon = "🎯"
+name = "Global weather webapp"
+icon = "🗺️"
 css = [
     "https://unpkg.com/normalize.css@8.0.1/normalize.css",
     "https://fonts.xz.style/serve/inter.css",
     "https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    #"https://unpkg.com/simpledotcss/simple.min.css",
 ]
 
 [about]
 author = "Zachary"
 profile = "https://github.com/Cutwell"
-description = "Generate a webpage as a GUI for a Python script, and serve from anywhere."
+description = "A weather app using Open Meteo data."
 
 [project]
 homepage = "https://github.com/Cutwell/python-web-io"

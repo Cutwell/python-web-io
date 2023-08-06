@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form id="mainForm" method="post">
+    {% for func in io %}
+
+    {% if func.type == 'print' %}
+    {{func.attributes.output | safe}}
+    
+    {% elif func.type == 'input' %}
+    <!--parse attrs dict into 'k=v' string-->
+    {% set func_attrs = func.attrs.items() | map("join", "=") | join(" ") %}
+    
+    <p>
+        <!--if buttons, render 1+ buttons with options-->
+        {% if func.attrs.type == "button" %}
+        {% set _ = func.attrs.update({'type': 'submit'}) %}
+
+        <!--reset func_attrs to reflect updated func.attrs-->
+        {% set func_attrs = func.attrs.items() | map("join", "=") | join(" ") %}
+        
+        {% if func.options %}
+        <label {{func_attrs}}>{{func.attributes.prompt}}</label>
+        {% for option in func.options %}
+        <input name="{{func.attributes.index}}" value="{{option}}" {% if func.attributes.output %} disabled {% endif %}
+            required form="mainForm" {{func_attrs}}>
+        {% endfor %}
+        {% else %}
+        <input name="{{func.attributes.index}}" value="{{func.attributes.prompt}}" 
+        {% if func.attributes.output %} disabled {% endif %} required form="mainForm" {{func_attrs}}>
+        {% endif %}
+        
+        <!--if radio or checkbox, render 1+ radio or checkbox with options-->
+        {% elif func.attrs.type == "radio" or func.attrs.type == "checkbox" %}
+        {% if func.options %}
+        <label {{func_attrs}}>{{func.attributes.prompt}}</label>
+        {% for option in func.options %}
+        <input name="{{func.attributes.index}}" value="{{option}}" {% if func.attributes.output %} disabled {% endif %}
+            form="mainForm" id="{{option}}" {{func_attrs}}>
+        <label for="{{option}}" {{func_attrs}}>{{option}}</label>
+        {% endfor %}
+        {% else %}
+        <input name="{{func.attributes.index}}" value="{{func.attributes.prompt}}" 
+        {% if func.attributes.output %} disabled {% endif %} form="mainForm" {{func_attrs}}>
+        <label for="{{func.attributes.prompt}}" {{func_attrs}}>{{func.attributes.prompt}}</label>
+        {% endif %}
+        
+        <!--else, render single input element with given type-->
+        {% else %}
+        <label for="{{func.attributes.index}}" {{func_attrs}}>{{func.attributes.prompt}}</label>
+        <input name="{{func.attributes.index}}" 
+        {% if func.attributes.output %} value="{{func.attributes.output}}" disabled {% endif %} {{func_attrs}}>
+        {%endif%}
+    </p>
+    {% endif %}
+    {% endfor %}
+    {% if error %}
+    <code>Error: {{error}}</code>
+    {% endif %}
+</form>
+<form id="resetForm" method="post" action="/reset"></form>
+
+<p><input type="submit" value="Submit" form="mainForm"> <input type="submit" value="Reset" form="resetForm"></p>
+{% endblock %}

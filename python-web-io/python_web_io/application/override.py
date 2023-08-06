@@ -1,12 +1,12 @@
 from flask import session
 import logging
+import markdown
 
 
 def Input(
     prompt: str = "Input",
-    magic: str = "text",
-    attrs: dict = None,
     options: list = None,
+    **kwargs
 ):
     """
     Override default input function.
@@ -16,13 +16,18 @@ def Input(
     Wait for callback from API.
 
     Arguments:
-        prompt (str): If the prompt argument is present, it is written to standard output without a trailing newline.
-        magic (str): Magic for defining the input element type.
-        attrs (dict): Accompanying kwargs for the magic setting, converted to string and used to set element attributes.
+        prompt (str): If present, used as 'value' attribute for element.
+        options (list): If present, "prompt" is used as label, and multiple elements of "type" are created.
+        kwargs (dict): Accompanying kwargs, used to set element attributes (if "type" not in kwargs, set as default "text"). kwargs with conflicting names (such as "class" can be written as "_class" and the leading "_" will be auto-stripped)
 
     Returns:
         output (str): The function reads from input, converts it to a string (stripping a trailing newline if present), and returns that.
     """
+
+    attrs = kwargs if kwargs else {}
+
+    # remove leading _ from kwarg keys
+    attrs = {k.replace("_", ""):v for k,v in attrs.items()}
 
     session["counter"] += 1
     index = session["counter"] - 1
@@ -39,13 +44,14 @@ def Input(
 
     # new element
     else:
-        if attrs:
-            attrs = dict_to_string(attrs)
+        # if input type not defined in kwargs, add default
+        if "type" not in attrs:
+            attrs["type"] = "text"
+
         session["io"].append(
             {
                 "type": "input",
                 "attributes": {"index": index, "prompt": prompt},
-                "magic": magic,
                 "attrs": attrs,
                 "options": options,
             }
@@ -60,11 +66,9 @@ def Print(
     end: str = "\n",
     file: object = None,
     flush: bool = False,
-    magic: str = "p",
-    attrs: dict = {},
 ):
     """
-    Override default print function.
+    Override default print function. Joins string inputs and interprets as markdown.
 
     Arguments:
         *objects: print objects to the text stream file, separated by sep and followed by end.
@@ -72,8 +76,6 @@ def Print(
         end (str): string applied to end of output string.
         file (object): file argument must be an object with a write(string) method; if it is not present or None, sys.stdout will be used.
         flush (bool): output buffering is usually determined by file. However, if flush is true, the stream is forcibly flushed.
-        magic (str): Magic for defining the output element tag.
-        attrs (dict): Accompanying kwargs for the magic setting, converted to string and used to set element attributes.
     """
 
     session["counter"] += 1
@@ -81,14 +83,11 @@ def Print(
     # if new element
     if session["counter"] > len(session["io"]):
         strings = [str(obj) for obj in objects]
-        output = f"{sep.join(strings)}{end}"
-        attrs = dict_to_string(attrs) if attrs else None
+        output = markdown.markdown(f"{sep.join(strings)}{end}")
         session["io"].append(
             {
                 "type": "print",
                 "attributes": {"output": output},
-                "magic": magic,
-                "attrs": attrs,
             }
         )
 
@@ -117,16 +116,3 @@ def Exec(source, globals=None, locals=None):
 @allow_ExecInterrupt
 def Entry(entry_point):
     return entry_point()
-
-
-def dict_to_string(d):
-    """
-    Converts a dictionary of key-value pairs into a string with "key=value" format, separated by " ".
-
-    Args:
-    - d (dict): A dictionary of key-value pairs.
-
-    Returns:
-    - str: A string with "key=value" format, separated by " ".
-    """
-    return " ".join([f"{k}={v}" for k, v in d.items()])

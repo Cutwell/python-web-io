@@ -1,45 +1,44 @@
 import logging
-import os
-import toml
-
 from flask import (
-    Flask,
     redirect,
     render_template,
     request,
     send_from_directory,
     session,
     url_for,
+    Blueprint,
 )
-from flask_session import Session
-
-# input, print are listed as unused, but exist to override builtin calls made from Exec() of the user script
-from python_web_io.cache import Cache, has_cache_expired, load_cache
-from python_web_io.override import (
+from ..cache import has_cache_expired, load_cache
+from ..override import (
     Entry,
     Exec,
     Input,
     Print,
 )
 
-app = Flask(__name__)
-app.config.from_prefixed_env()
-
-Session(app)
+from .. import cache_config
 
 
-@app.errorhandler(500)
+# Blueprint Configuration
+home_bp = Blueprint(
+    'home_bp', __name__,
+    template_folder='templates',
+    static_folder='static'
+)
+
+
+@home_bp.errorhandler(500)
 def internal_error(error):
     """
     If the user was part-way through submitting a form when the server dies, and does not close the browser tab to clear session cookies, the app may get confused due to a mismatch between server session and user progress.
     A custom 500 error page should inform the user of this issue and direct them to clear cookies / close the tab to fix.
     """
 
-    return render_template("500.html", page=Cache.get("page"), error=error)
+    return render_template("500.html", page=cache_config.get("page"), error=error)
 
 
-@app.route("/", methods=["GET", "POST"])
-@app.route("/index", methods=["GET", "POST"])
+@home_bp.route("/", methods=["GET", "POST"])
+@home_bp.route("/index", methods=["GET", "POST"])
 def index():
     """
     Run a Python script, generating a list of IO to display.
@@ -51,13 +50,13 @@ def index():
     """
 
     # check if cached script has expired (has script been modified since we read from it?)
-    if has_cache_expired():
+    if has_cache_expired(cache_config):
         logging.info("Refreshing expired cache.")
         # reset session
         session["io"] = []
 
         # reload script into Cache
-        load_cache()
+        load_cache(cache_config)
 
     # POST request indicates user is submitting input
     elif request.method == "POST":
@@ -97,11 +96,11 @@ def index():
     # execute the user script to collect IO elements
     # if an unencountered input is found, the script terminates early and the user is prompted to provide input
     namespace = {"print": Print, "input": Input}
-    error = Exec(Cache.get("code"), namespace)
+    error = Exec(cache_config.get("code"), namespace)
 
     # if an entrypoint is defined, run that function (from the created namespace)
-    script = Cache.get("script")
-    if script["entrypoint"]:
+    script = cache_config.get("script")
+    if "entrypoint" in script:
         Entry(namespace[script["entrypoint"]])
 
     # if error raised, then previous input is likely invalid
@@ -122,15 +121,15 @@ def index():
     # render collected IO into a form - inputs with submitted values are disabled
     return render_template(
         "index.html",
-        page=Cache.get("page"),
+        page=cache_config.get("page"),
         io=session["io"],
         error=error,
-        about=Cache.get("about"),
-        project=Cache.get("project"),
+        about=cache_config.get("about"),
+        project=cache_config.get("project"),
     )
 
 
-@app.route("/reset", methods=["GET", "POST"])
+@home_bp.route("/reset", methods=["GET", "POST"])
 def reset():
     """
     Reset the user session.
@@ -139,9 +138,9 @@ def reset():
     session["io"] = []
 
     # render collected IO into a form - inputs with submitted values are disabled
-    return redirect(url_for("index"))
+    return redirect(url_for("home_bp.index"))
 
 
-@app.route("/static/<path:path>")
+@home_bp.route("/static/<path:path>")
 def send_report(path):
     return send_from_directory("static", path)

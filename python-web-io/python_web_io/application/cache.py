@@ -2,64 +2,64 @@ import os
 import pickle
 import functools
 
-
 class LocalCache:
     """
     Create a local cache, to set per-session variables.
     """
 
-    io = []
-    counter = 0
+    def __init__(self):
+        self.io = []
+        self.counter = 0
 
-    @staticmethod
-    def reset():
-        LocalCache.io = []
-        LocalCache.counter = 0
+    def reset(self):
+        self.io = []
+        self.counter = 0
 
 
 class Cache:
     """
     Create a global cache, to access config variables from multiple Flask sessions.
     """
+    def __init__(self):
+        self.__conf = {
+            "script": {},  # script filepath and entrypoint
+            "code": "",  # Python user code (compiled)
+            "last_read_time": 0,  # Epoch time of last file access
+            "about": {},  # project author, author link, project description
+            "project": {},  # links for license, homepage, bug reporting
+            "page": {
+                "name": "Python Web I/O",
+                "icon": "🎯",
+                "css": "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css",
+            },  # customisation for name, icon, css href
+        }
+        self.__setters = [
+            "script",
+            "code",
+            "name",
+            "icon",
+            "last_read_time",
+            "about",
+            "project",
+            "page",
+        ]
 
-    __conf = {
-        "script": {},  # script filepath and entrypoint
-        "code": "",  # Python user code (compiled)
-        "last_read_time": 0,  # Epoch time of last file access
-        "about": {},  # project author, author link, project description
-        "project": {},  # links for license, homepage, bug reporting
-        "page": {
-            "name": "Python Web I/O",
-            "icon": "🎯",
-            "css": "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css",
-        },  # customisation for name, icon, css href
-    }
-    __setters = [
-        "script",
-        "code",
-        "name",
-        "icon",
-        "last_read_time",
-        "about",
-        "project",
-        "page",
-    ]
+    def get(self, name):
+        return self.__conf[name]
 
-    @staticmethod
-    def get(name):
-        return Cache.__conf[name]
-
-    @staticmethod
-    def set(name, value):
-        if name in Cache.__setters:
-            Cache.__conf[name] = value
+    def set(self, name, value):
+        if name in self.__setters:
+            self.__conf[name] = value
         else:
             raise NameError(
                 f"'{name}' not accepted in set() method (reserved for internal use)."
             )
+        
+    def __str__(self):
+        return str(self.__conf)
 
 
-def has_cache_expired():
+def has_cache_expired(cache_config):
     """
     Check if a file has been updated since it was last read.
 
@@ -71,17 +71,17 @@ def has_cache_expired():
         bool: True if the file has been updated since it was last read, False otherwise.
     """
     # Get the last modified time of the file
-    modified_time = os.path.getmtime(Cache.get("script")["filepath"])
+    modified_time = os.path.getmtime(cache_config.get("script")["filepath"])
 
     # Compare the last modified time with the last read time
-    if modified_time > Cache.get("last_read_time"):
+    if modified_time > cache_config.get("last_read_time"):
         return True
     else:
         return False
 
 
-def load_cache():
-    filepath = Cache.get("script")["filepath"]
+def load_cache(cache_config):
+    filepath = cache_config.get("script")["filepath"]
 
     with open(filepath, mode="r", encoding="utf-8") as file:
         code = file.read()
@@ -89,8 +89,8 @@ def load_cache():
     # compile the code
     compiled_code = compile(code, filepath, "exec")
 
-    Cache.set("last_read_time", os.path.getmtime(filepath))
-    Cache.set("code", compiled_code)
+    cache_config.set("last_read_time", os.path.getmtime(filepath))
+    cache_config.set("code", compiled_code)
 
 
 def cache_to_file(file_path: str = "cache.pickle"):

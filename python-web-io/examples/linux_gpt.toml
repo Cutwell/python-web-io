@@ -1,0 +1,27 @@
+[script]
+filepath = "examples/linux_gpt.py"
+entrypoint = "main"
+
+[page]
+name = "Linux GPT"
+icon = "🤖"
+css = [
+    "https://unpkg.com/normalize.css@8.0.1/normalize.css",
+    "https://fonts.xz.style/serve/inter.css",
+    "https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
+]
+
+[about]
+author = "Zachary"
+profile = "https://github.com/Cutwell"
+description = "Demo of LangChain integration, using an OpenAI LLM to imitate a linux terminal."
+
+[project]
+homepage = "https://github.com/Cutwell/python-web-io"
+license = "https://github.com/Cutwell/python-web-io/blob/main/LICENSE"
+issues = "https://github.com/Cutwell/python-web-io/issues/new"
+
+[flask]
+host = '127.0.0.1'
+port = 5000
+debug = false
