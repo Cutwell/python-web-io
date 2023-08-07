@@ -6,7 +6,7 @@ install: ## install dependencies
 
 publish: ## build module and publish as new version to PyPI
 	@poetry build
-	@poetry publish
+	@poetry publish --username=$(PYPI_USERNAME) --password=$(PYPI_PASSWORD)
 
 help: ## display this help screen
     @grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

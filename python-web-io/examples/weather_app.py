@@ -199,3 +199,6 @@ def main():
         f"Temperature 🌡️: {weather['current_weather']['temperature']}°C<br>",
         f"Wind speed 💨: {weather['current_weather']['windspeed']} km/h, Wind direction 🧭: {winddirection}° ({degrees_to_direction(winddirection)})"
     )
+
+if __name__ == "__main__":
+    main()

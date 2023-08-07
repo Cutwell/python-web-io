@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "python-web-io"
-version = "0.1.11"
+version = "0.1.15"
 description = "Generate a webpage as a GUI for a Python script, and serve from anywhere."
-authors = ["Zachary Smith"]
+authors = ["Zachary Smith <zachsmith.dev@gmail.com>"]
 packages = [{include = "python_web_io"}]
 license = "MIT"
 readme = "README.md"
@@ -23,13 +23,14 @@ starsessions = "^2.1.2"
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 pre-commit = "^3.2.2"
-openai = "^0.27.5"
-pandas = "^2.0.1"
 
+[tool.poetry.group.examples]
+optional = true
+
+[tool.poetry.group.examples.dependencies]
+pandas = "^2.0.3"
+openai = "^0.27.8"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-python_web_io = "python_web_io.main:app"

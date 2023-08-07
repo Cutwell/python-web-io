@@ -1,51 +1,60 @@
-# Python Web I/O
+# <img src="./.github/logo.png" style="width:40px;padding-right:10px;margin-bottom:-8px;" alt="Sticker of a cute yellow Python snake, representing the use of the Python programming language in this project."> Python Web I/O
  Generate a webpage as a GUI for a Python script, and serve from anywhere.
 
-## Usage
-```
-$ export SECRET_KEY="someSecureSecretKey"
-$ python_web_io .\example.py
-```
-* Create a `.envrc` file, setting `SECRET_KEY` as per [`python_web_io/.envrc.example`](https://github.com/Cutwell/python-web-io/blob/main/python_web_io/.envrc.example).
-* Try running the [`example.py`](https://github.com/Cutwell/python-web-io/blob/main/python_web_io/example.py) script using `python_web_io example.py`.
+## Documentation
+Check out the [wiki](https://github.com/Cutwell/python-web-io/wiki).
 
-|Argument|||
-|:---:|:---:|:---:|
-|`"example.py"`|Required|Specify the file path for the app Python script / entrypoint.|
-|`--debug`|Optional|Run the Flask server with debug output enabled.|
+## Quickstart
 
-## Config
-### Magic
-`input()` and `print()` both support the `magic` keyword argument. For `input()`, `magic` sets the `type` of the input html element. For `print()`, `magic` sets the element type.
-
-||Magic|Default|
-|:---:|:---:|:---:|
-|`input()`|`button`, `checkbox`, `color`, `date`, `datetime-local`, `email`, `file`, `image`, `month`, `number`, `password`, `radio`, `range`, `search`, `tel`, `text`, `time`, `url`, `week`|`text`|
-|`print()`|`style`, `img`, `address`, `footer`, `aside`, `header`, `h1..6`, `blockquote`, `p`, `b`, `abbr`, `code`, `em`, `i`, `mark`, `q`, `s`, `small`, `span`, `strong`, |`p`|
-
-#### Arguments
-`input()` and `print()` both support the `magic_args` keyword argument. `magic_args` accepts a dictionary, which can be used to set attributes for the html element.
-
-### Cache
-The user script is re-evaluated after each user interaction, to progress the script to the next `input()`, etc. This means expensive functions may be called more than once per session. To reduce latency, a cache decorator is made available through the `python_web_io` module. The `@cache_to_file()` decorator accepts a single argument: `file_path`, which indicates where the cache (a `.pkl` file) should be stored.
-
-```python3
-import python_web_io as io
-
-@io.cache_to_file('cache.pickle')
-def expensive_function(arg):
-    # Calculate the result here
-    return result
+Install `python-web-io` locally using:
+```bash
+pip install python-web-io
 ```
 
-Cache is persistent across sessions, allowing multiple users to access it. Session specific data can be stored using `session` from `flask`.
-
-```python3
-from flask import session
-session['some_var] = 'some_val'
+Or via `poetry` using:
+```bash
+poetry add python_web_io
 ```
 
-Reserved keys for the `session` namespace are: `io` and `counter`. 
+If evaluating / testing `python-web-io`, install dependencies for the example apps using:
+```bash
+poetry add python_web_io --with examples
+```
+
+After installing the project, some environment setup is required:
+
+### Required setup
+Create an `app.py` file containing your script, and an `.envrc` file to store project secrets. (Note: remember to add `.envrc` to your `.gitignore`)
+Look for example apps in [`./python_web_io/examples`](https://github.com/Cutwell/python-web-io/tree/main/python_web_io/examples).
+```
+.
+├── .envrc
+├── config.toml
+└── app.py
+```
+
+Add the following environment variables to your `.envrc`. (Note: remember to activate the `.envrc` in your terminal using `direnv allow`)
+```bash
+# server env vars
+export PYTHON_WEB_IO_SECRET=""
+export PYTHON_WEB_IO_CONFIG=".pythonwebio/config.toml" 	# defaults to .pythonwebio/config.toml if not set
+```
+
+Generate a random key for `PYTHON_WEB_IO_SECRET` using this python command line snippet:
+```bash
+python -c 'import secrets; print(secrets.token_hex())'
+```
+
+If testing `wikipedia_assistant.py`, an OpenAI API key will also need to be set.
+```bash
+export OPENAI_API_KEY=""
+```
+
+### Running the webapp
+We recommend running `python_web_io` using `uvicorn`:
+```bash
+poetry run uvicorn python_web_io.main:app
+```
 
 ## License
 MIT

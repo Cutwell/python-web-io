@@ -72,3 +72,6 @@ def main():
 
     hex_color = input("What's your favourite color?", type="color")    
     print(f"Nice! That colour looks like {get_nearest_color_name(hex_color)}!")
+
+if __name__ == "__main__":
+    main()

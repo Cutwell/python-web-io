@@ -1,6 +1,6 @@
 # NOTE: save this file as .envrc and activate using `direnv allow` from same directory
 
-# if testing `tests/linux_gpt.py`, set your OpenAI API Key
+# if testing `examples/wikipedia_assistant.py`, set your OpenAI API Key
 export OPENAI_API_KEY=""
 
 # server env vars

@@ -1,5 +1,5 @@
 [script]
-filepath = "examples/linux_gpt.py"
+filepath = "examples/wikipedia_assistant.py"
 entrypoint = "main"
 
 [page]

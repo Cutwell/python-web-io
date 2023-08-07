@@ -1,5 +1,5 @@
 [script]
-filepath = "examples/color_names.py"
+filepath = "examples/wikipedia_assistant.py"
 entrypoint = "main"
 
 [page]

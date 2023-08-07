@@ -4,6 +4,7 @@ import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import pkg_resources
 import toml
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
@@ -48,7 +49,10 @@ async def lifespan(app: FastAPI):
     app.state.page = {
         "name": "Python Web I/O",
         "icon": "🎯",
-        "css": "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css",
+        "css": [
+            "https://unpkg.com/normalize.css@8.0.1/normalize.css",
+            "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+        ],
     }
 
     # look for a .pythonwebio directory containing a config.toml file.
@@ -57,7 +61,7 @@ async def lifespan(app: FastAPI):
             # parse toml into config dict
             config = toml.loads(file.read())
 
-        if config["page"]:
+        if "page" in config:
             # if css set and is string, wrap as list
             if config["page"]["css"] and isinstance(config["page"]["css"], str):
                 config["page"]["css"] = [
@@ -65,16 +69,16 @@ async def lifespan(app: FastAPI):
                 ]
             app.state.page = config["page"]
 
-        if config["about"]:
+        if "about" in config:
             app.state.about = config["about"]
 
-        if config["project"]:
+        if "project" in config:
             app.state.project = config["project"]
 
-        if config["script"]:
+        if "script" in config:
             app.state.script = config["script"]
 
-        if config["server"] and config["server"]["debug"] is True:
+        if "server" in config and config["server"]["debug"] is True:
             # enable debug logging
             logging.basicConfig(level=logging.DEBUG)
 
@@ -110,15 +114,20 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.secret_key = os.getenv("PYTHON_WEB_IO_SECRET", "")
 app.state.cli_script_config = None
-app.state.config_path = os.getenv(
-    "PYTHON_WEB_IO_CONFIG", ".pythonwebio/config.toml"
-)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.state.config_path = os.getenv("PYTHON_WEB_IO_CONFIG", ".pythonwebio/config.toml")
+
+# Get the path to the templates directory within your package
+templates_path = pkg_resources.resource_filename(__name__, "templates")
+
+# Create Jinja2Templates instance with the templates directory
+templates = Jinja2Templates(directory=templates_path)
+
+# check /static exists before mounting (as optional)
+if os.path.exists("static") and os.path.isdir("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(SessionAutoloadMiddleware)
 app.add_middleware(SessionMiddleware, store=InMemoryStore())
-
-templates = Jinja2Templates(directory="python_web_io/templates")
 
 
 def handle_session(session):
@@ -304,6 +313,7 @@ if __name__ == "__main__":
     """
 
     import argparse
+
     import uvicorn
 
     def parse_command_line_arguments():

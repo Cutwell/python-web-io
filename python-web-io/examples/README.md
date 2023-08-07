@@ -20,7 +20,7 @@ Download the free [World Cities Database](https://simplemaps.com/data/world-citi
 Demo of LangChain integration, using an OpenAI LLM to imitate a linux terminal.
 
 ```bash
-poetry run python_web_io --config=examples/linux_gpt.toml
+poetry run python_web_io --config=examples/wikipedia_assistant.toml
 ```
 
 ## 🎨 Color names
