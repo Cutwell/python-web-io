@@ -32,4 +32,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-python_web_io = "python_web_io.cli:start"
+python_web_io = "python_web_io.main:app"
