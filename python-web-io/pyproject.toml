@@ -34,3 +34,6 @@ openai = "^0.27.8"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+python_web_io = "python_web_io.main:test_mode"

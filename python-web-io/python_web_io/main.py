@@ -51,7 +51,7 @@ async def lifespan(app: FastAPI):
         "icon": "🎯",
         "css": [
             "https://unpkg.com/normalize.css@8.0.1/normalize.css",
-            "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+            "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css",
         ],
     }
 
@@ -306,7 +306,8 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     )
 
 
-if __name__ == "__main__":
+# test mode
+def test_mode():
     """
     If running python_web_io/main.py directly (instead of via uvicorn with an entrypoint), accept CLI arguments.
     Ideal for quickly testing capabilities without creating `.envrc` or `.pythonwebio/config.toml` files.
@@ -321,7 +322,6 @@ if __name__ == "__main__":
         parser.add_argument(
             "--script",
             type=str,
-            default="default_value1",
             help="Set the python script (override `config.toml` settings) (format: e.g.:`path/to/file.py:main`).",
         )
         parser.add_argument(
@@ -344,3 +344,7 @@ if __name__ == "__main__":
     app.state.config_path = args.config
 
     uvicorn.run(app, host=args.host, port=args.port)
+
+
+if __name__ == "__main__":
+    test_mode()
