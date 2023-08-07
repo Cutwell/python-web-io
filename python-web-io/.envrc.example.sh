@@ -4,5 +4,5 @@
 export OPENAI_API_KEY=""
 
 # server env vars
-export PYTHONWEBIO_SECRET_KEY=""
-export PYTHONWEBIO_CONFIG_PATH=".pythonwebio/config.toml" 	# defaults to .pythonwebio/config.toml if not set
+export PYTHON_WEB_IO_SECRET=""
+export PYTHON_WEB_IO_CONFIG=".pythonwebio/config.toml" 	# defaults to .pythonwebio/config.toml if not set

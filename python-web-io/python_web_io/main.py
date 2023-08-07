@@ -24,11 +24,7 @@ from python_web_io.override import (
 
 def update_cached_file_data():
     logging.info("Refreshing expired cache.")
-    file_path = app.state.script["filepath"]
-    with open(file_path, "r", encoding="utf-8") as file:
-        code = file.read()
-    app.state.compiled_script_cache = compile(code, file_path, "exec")
-    app.state.compiled_script_cache_timestamp = time.time()
+    app.state.script_modified_timestamp = time.time()
 
 
 class FileChangeHandler(FileSystemEventHandler):
@@ -88,8 +84,7 @@ async def lifespan(app: FastAPI):
         app.state.script["filepath"] = filepath
         app.state.script["entrypoint"] = entrypoint
 
-    app.state.compiled_script_cache = None
-    app.state.compiled_script_cache_timestamp = time.time()
+    app.state.script_modified_timestamp = time.time()
     update_cached_file_data()
 
     # Initialize the watchdog observer
@@ -113,10 +108,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.secret_key = os.getenv("PYTHONWEBIO_SECRET_KEY", "")
+app.secret_key = os.getenv("PYTHON_WEB_IO_SECRET", "")
 app.state.cli_script_config = None
 app.state.config_path = os.getenv(
-    "PYTHONWEBIO_CONFIG_FILEPATH", ".pythonwebio/config.toml"
+    "PYTHON_WEB_IO_CONFIG", ".pythonwebio/config.toml"
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -132,9 +127,9 @@ def handle_session(session):
         session["io"] = []
         session["cached_timestamp"] = time.time()
 
-    if app.state.compiled_script_cache_timestamp > session["cached_timestamp"]:
+    if app.state.script_modified_timestamp > session["cached_timestamp"]:
         session["io"] = []
-        session["cached_timestamp"] = app.state.compiled_script_cache_timestamp
+        session["cached_timestamp"] = app.state.script_modified_timestamp
 
 
 def handle_script(session):
