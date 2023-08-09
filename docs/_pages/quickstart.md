@@ -4,9 +4,11 @@ toc: true
 ---
 
 # Quickstart
+
 After installing the project, some environment setup is required:
 
 ## Required setup
+
 Create an `app.py` file containing your script, a `config.toml` setting the script filepath and entrypoint, and an `.envrc` file to store project secrets. (Note: remember to add `.envrc` to your `.gitignore`). Look for example apps in [`/examples`](https://github.com/Cutwell/python-web-io/tree/main/python-web-io/examples).
 ```
 .

@@ -4,6 +4,7 @@ toc: true
 ---
 
 # Configuration and settings
+
 The appearance of generated pages are customisable via a `config.toml` file.
 Create a subdirectory `/.pythonwebio` relative to were the project will be called from, and create a `config.toml` file inside.
 ```
@@ -15,6 +16,7 @@ Create a subdirectory `/.pythonwebio` relative to were the project will be calle
 ```
 
 ## Example `.envrc`
+
 If using a `config.toml` file in a non-default location (and deploying via `uvicorn`), set the config filepath via the `PYTHON_WEB_IO_CONFIG` environment variable. 
 
 ```bash
@@ -24,6 +26,7 @@ export PYTHON_WEB_IO_CONFIG=".pythonwebio/config.toml" 	# defaults to .pythonweb
 ```
 
 ## Example `config.toml`
+
 ```TOML
 [script]
 filepath = "app.py"
@@ -52,6 +55,7 @@ debug = false
 ```
 
 ## CLI
+
 `python_web_io` is designed to be run (for production and development) using `uvicorn`. Use the [uvicorn settings](https://www.uvicorn.org/settings/) docs for a reference to setup your server.
 
 For quick testing, `python_web_io` can also be ran as a Python script. Running directly spawns a `uvicorn` server with limited config options. Test mode is designed for evaluating multiple scripts quickly without editing a `config.toml` file, e.g.: testing the `/examples` scripts.
@@ -68,13 +72,16 @@ poetry run python_web_io --script="app.py" --config=".pythonwebio/config.toml" -
 |`--port`|Set the Uvicorn server port (default: `8000`).|
 
 ## `config.toml` Documentation
+
 ### `[script]`
+
 |||
 |:---:|:---|
 |`filepath`|Rather than provide a script filepath via command line, an app filepath can also be defined here.|
 |`entrypoint`|Python scripts using the typical `if __name__ == '__main__': main()` will not run, as this check will fail. To resolve this, a function name can be supplied as an entrypoint for the script, and will be called to begin execution.|
 
 ### `[page]`
+
 |||
 |:---:|:---|
 |`name`|Webapp name, used as the website / tab title.|
@@ -82,6 +89,7 @@ poetry run python_web_io --script="app.py" --config=".pythonwebio/config.toml" -
 |`css`|Drop-in CSS styling is supported and encouraged to customise a web-app to user preference. A curated list of drop-in stylesheets can be found [here](https://github.com/sw-yx/spark-joy/blob/master/README.md#drop-in-css-frameworks). This option can be a list of stylesheets or a single item.|
 
 ### `[about]`
+
 These options populate the `About` modal, accessible from the page footer.
 |||
 |:---:|:---|
@@ -90,6 +98,7 @@ These options populate the `About` modal, accessible from the page footer.
 |`description`|A short description to summarise the webapp.|
 
 ### `[project]`
+
 These options populate the `Help` modal, accessible from the page footer.
 |||
 |:---:|:---|
@@ -98,6 +107,7 @@ These options populate the `Help` modal, accessible from the page footer.
 |`issues`|A link to a forum / issue tracker for reporting bugs users may encounter.|
 
 ### `[server]`
+
 These options are for the underlying FastAPI server:
 |||
 |:---:|:---|

@@ -4,6 +4,7 @@ toc: true
 ---
 
 # I/O Overrides
+
 `input()` and `print()` are overridden to add "magic" features.
 
 ## `print()`
@@ -14,6 +15,7 @@ toc: true
 * Since strings are evaluated as raw HTML, this also allows use of `<img>`, `<style>` and `<script>` tags for more advanced app control (beware allowing unfiltered user input!).
 
 ### Examples
+
 ```python
 # display some text wrapped in `small` HTML tags
 print("<small>This is some subtext, it's not important.</small>")
@@ -51,6 +53,7 @@ print("<img id='logo' src='https://cdn2.iconfinder.com/data/icons/activity-5/50/
 * By setting `attrs`, you can set additional attributes, such as `class` and `id`. Pass a dictionary in the format `{attribute: value}`, e.g.: `{'id': "myelement", 'class': "myclass"}`.
 
 ### Custom attribute examples
+
 ```python
 # return a number between 1-100
 input("Pick a number between 1-100", type='range', attrs={'min': 0, 'max': 100})
@@ -72,6 +75,7 @@ input("Enter your telephone number", type='tel', attrs={'pattern': "[0-9]{3}-[0-
 ```
 
 ## Custom option examples
+
 For input types such as `button`, `radio` and `checkbox`, multiple inputs can be rendered at once. This is an optional argument for all inputs, but will only have an effect for these listed input types.
 
 `button` and `radio` inputs can return a single option, or `None`, e.g.:
