@@ -1,5 +1,4 @@
 ---
-title: "Configuration"
 permalink: /docs/config/
 toc: true
 ---

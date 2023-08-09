@@ -1,5 +1,4 @@
 ---
-title: "Quickstart"
 permalink: /docs/quickstart/
 toc: true
 ---

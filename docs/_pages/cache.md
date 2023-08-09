@@ -1,5 +1,4 @@
 ---
-title: "Caching expensive operations"
 permalink: /docs/cache/
 toc: true
 ---

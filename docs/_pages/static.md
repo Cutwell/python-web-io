@@ -1,5 +1,4 @@
 ---
-title: "Static files"
 permalink: /docs/static/
 toc: true
 ---

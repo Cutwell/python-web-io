@@ -1,5 +1,4 @@
 ---
-title: "Installation"
 permalink: /docs/install/
 toc: true
 ---

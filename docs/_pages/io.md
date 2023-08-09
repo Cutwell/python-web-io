@@ -1,5 +1,4 @@
 ---
-title: "I/O Overrides"
 permalink: /docs/io/
 toc: true
 ---
