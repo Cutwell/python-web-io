@@ -22,7 +22,7 @@ subtitle                 : # site tagline that appears below site title in masth
 name                     : "Zachary Smith"
 description              : "Generate a webpage as a GUI for a Python script, and serve from anywhere.."
 url                      : "https://cutwell.github.io"
-baseurl                  : "/python-web-io/docs"
+baseurl                  : "/python-web-io"
 repository               : "cutwell/python-web-io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : "https://raw.githubusercontent.com/Cutwell/python-web-io/main/.github/logo-40x38.png"
