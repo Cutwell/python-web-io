@@ -74,6 +74,8 @@ input("Enter your telephone number", type='tel', attrs={'pattern': "[0-9]{3}-[0-
 <input type='tel' pattern=[0-9]{3}-[0-9]{2}-[0-9]{3}>
 ```
 
+# I/O overrides
+
 For input types such as `button`, `radio` and `checkbox`, multiple inputs can be rendered at once. This is an optional argument for all inputs, but will only have an effect for these listed input types.
 
 `button` and `radio` inputs can return a single option, or `None`, e.g.:
