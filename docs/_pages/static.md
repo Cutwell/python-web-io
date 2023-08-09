@@ -3,8 +3,6 @@ permalink: /docs/static/
 toc: true
 ---
 
-# Serving static files
-
 If you wish to serve local files, such as custom `.css` stylesheets or images, they will need to be placed in the `./static` folder, relative to the project root.
 
 ```

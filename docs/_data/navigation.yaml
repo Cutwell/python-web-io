@@ -8,7 +8,7 @@ docs:
 
   - title: Customization
     children:
-      - title: "Configuration"
+      - title: "Configuration and settings"
         url: /docs/config/
 
   - title: Content
