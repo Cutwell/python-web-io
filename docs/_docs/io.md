@@ -1,3 +1,9 @@
+---
+title: "I/O"
+permalink: /docs/io/
+toc: true
+---
+
 `input()` and `print()` are overridden to add "magic" features.
 
 ## `print()`

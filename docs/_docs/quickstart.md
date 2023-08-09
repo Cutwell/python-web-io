@@ -1,3 +1,9 @@
+---
+title: "Quickstart"
+permalink: /docs/quickstart/
+toc: true
+---
+
 After installing the project, some environment setup is required:
 
 ## Required setup

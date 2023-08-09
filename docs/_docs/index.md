@@ -1,3 +1,9 @@
+---
+title: "Home"
+permalink: /docs/
+toc: true
+---
+
 # <img src="https://raw.githubusercontent.com/Cutwell/python-web-io/main/.github/logo-40x38.png" style="width:40px;padding-right:10px;margin-bottom:-8px;" alt="Sticker of a cute yellow Python snake, representing the use of the Python programming language in this project."> Python Web I/O Website / Docs
  Generate a webpage as a GUI for a Python script, and serve from anywhere.
 

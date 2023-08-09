@@ -1,4 +1,11 @@
+---
+title: "Static files"
+permalink: /docs/static/
+toc: true
+---
+
 If you wish to serve local files, such as custom `.css` stylesheets or images, they will need to be placed in the `./static` folder, relative to the project root.
+
 ```
 .
 ├── .envrc
