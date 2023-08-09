@@ -1,9 +1,10 @@
 ---
 title: "Configuration"
-permalink: /docs/configuration/
+permalink: /docs/config/
 toc: true
 ---
 
+# Configuration and settings
 The appearance of generated pages are customisable via a `config.toml` file.
 Create a subdirectory `/.pythonwebio` relative to were the project will be called from, and create a `config.toml` file inside.
 ```

@@ -1,9 +1,10 @@
 ---
-title: "I/O"
+title: "I/O Overrides"
 permalink: /docs/io/
 toc: true
 ---
 
+# I/O Overrides
 `input()` and `print()` are overridden to add "magic" features.
 
 ## `print()`

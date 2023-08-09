@@ -1,0 +1,24 @@
+docs:
+  - title: Getting Started
+    children:
+      - title: "Installation"
+        url: /docs/install/
+      - title: "Quickstart Guide"
+        url: /docs/quickstart/
+
+  - title: Customization
+    children:
+      - title: "Configuration"
+        url: /docs/config/
+
+  - title: Content
+    children:
+      - title: "Serving static files"
+        url: /docs/static/
+
+  - title: Python tools
+    children:
+      - title: "I/O Overrides"
+        url: /docs/io/
+      - title: "Caching expensive operations"
+        url: /docs/cache/

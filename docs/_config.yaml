@@ -22,7 +22,7 @@ subtitle                 : # site tagline that appears below site title in masth
 name                     : "Zachary Smith"
 description              : "Generate a webpage as a GUI for a Python script, and serve from anywhere.."
 url                      : "https://cutwell.github.io"
-baseurl                  : "/python-web-io"
+baseurl                  : "/python-web-io/docs"
 repository               : "cutwell/python-web-io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : "https://raw.githubusercontent.com/Cutwell/python-web-io/main/.github/logo-40x38.png"
@@ -58,7 +58,7 @@ reCaptcha:
   secret                 :
 atom_feed:
   path                   : # blank (default) uses feed.xml
-  hide                   : # true, false (default)
+  hide                   : true, false (default)
 search                   : # true, false (default)
 search_full_content      : # true, false (default)
 search_provider          : # lunr (default), algolia, google
@@ -278,14 +278,11 @@ compress_html:
 
 # Defaults
 defaults:
-  # _posts
+  # _pages
   - scope:
       path: ""
-      type: posts
+      type: pages
     values:
       layout: single
-      author_profile: false
-      read_time: false
-      comments: # true
-      share: false
-      related: false
+      sidebar:
+        nav: "docs"

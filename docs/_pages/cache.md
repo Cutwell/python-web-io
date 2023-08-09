@@ -1,9 +1,10 @@
 ---
-title: "Cache"
+title: "Caching expensive operations"
 permalink: /docs/cache/
 toc: true
 ---
 
+# Caching expensive operations
 `python-web-io` works by re-evaluating the target script after each user interaction, to progress the script to the next `input()`, etc.
 This means expensive functions may be called more than once per session.
 To reduce latency, a cache decorator is made available through the `python_web_io` module.
