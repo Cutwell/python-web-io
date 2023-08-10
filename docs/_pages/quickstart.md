@@ -1,9 +1,8 @@
 ---
 permalink: /docs/quickstart/
 toc: true
+title: Quickstart guide
 ---
-
-# Quickstart guide
 
 After installing the project, some environment setup is required:
 

@@ -1,9 +1,8 @@
 ---
 permalink: /docs/install/
 toc: true
+title: Installation
 ---
-
-# Installation
 
 Install `python-web-io` locally using:
 ```bash
