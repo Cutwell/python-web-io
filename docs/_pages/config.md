@@ -114,3 +114,10 @@ These options are for the underlying FastAPI server:
 |||
 |:---:|:---|
 |`debug`|Boolean to enable debug mode.|
+
+---
+
+Next steps:
+
+1. Learn how to [serve static files](https://cutwell.github.io/python-web-io/docs/static/), such as images or CSS files.
+2. Deep dive into customising your webpage using `print()` and `input()` [overrides](https://cutwell.github.io/python-web-io/docs/io/).

@@ -18,3 +18,7 @@ If evaluating / testing `python-web-io`, install dependencies for the example ap
 ```bash
 poetry add python_web_io --with examples
 ```
+
+---
+
+Next steps: setup a POC with the [quickstart guide](https://cutwell.github.io/python-web-io/docs/quickstart/).

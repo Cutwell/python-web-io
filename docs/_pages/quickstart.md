@@ -45,3 +45,7 @@ We recommend running `python_web_io` using `uvicorn`:
 ```bash
 poetry run uvicorn python_web_io.main:app
 ```
+
+---
+
+Next steps: Learn more about [project configuration](https://cutwell.github.io/python-web-io/docs/config/).

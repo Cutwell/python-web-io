@@ -2,7 +2,7 @@
  Generate a webpage as a GUI for a Python script, and serve from anywhere.
 
 ## Documentation
-Check out the [wiki](https://github.com/Cutwell/python-web-io/wiki).
+Check out the [wiki](https://cutwell.github.io/python-web-io/).
 
 ## Quickstart
 

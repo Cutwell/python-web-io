@@ -113,3 +113,7 @@ input("What's your thoughts on Marmite?", type='radio', options=['love it', 'hat
 <label>What's your thoughts on Marmite?</label>
 <input type='radio' value='love it' required> <input type='radio' value='hate it' required>
 ```
+
+---
+
+Next steps: Learn how to [cache expensive functions](https://cutwell.github.io/python-web-io/docs/cache/) to improve latency.
