@@ -90,6 +90,7 @@ poetry run python_web_io --script="app.py" --config=".pythonwebio/config.toml" -
 ### `[about]`
 
 These options populate the `About` modal, accessible from the page footer.
+
 |||
 |:---:|:---|
 |`author`|Author's name / online alias.|
@@ -99,6 +100,7 @@ These options populate the `About` modal, accessible from the page footer.
 ### `[project]`
 
 These options populate the `Help` modal, accessible from the page footer.
+
 |||
 |:---:|:---|
 |`homepage`|A link to the project homepage, for instance on GitHub.|
@@ -108,6 +110,7 @@ These options populate the `Help` modal, accessible from the page footer.
 ### `[server]`
 
 These options are for the underlying FastAPI server:
+
 |||
 |:---:|:---|
 |`debug`|Boolean to enable debug mode.|

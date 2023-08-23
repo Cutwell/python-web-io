@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/python-web-io?style=flat-square)](https://pypi.org/project/python-web-io/)
 
 ## Documentation
-Check out the [wiki](https://cutwell.github.io/python-web-io/docs/).
+Check out the [wiki](https://cutwell.github.io/python-web-io/).
 
 ## License
 MIT
